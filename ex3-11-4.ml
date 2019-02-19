@@ -21,6 +21,8 @@ let (a, b) = (moji.[i], moji.[i+1]);;
 
 let test3 = takeBig(a, b) = b;;
 
+(* 文字列の個々の文字の大きさ(ASCII)を比べ、一番大きい文字を返す関数 *)
+(* hikaku : String, int, char => char *)
 let rec hikaku (moji, i, a) =
   if i = String.length moji
   then a
