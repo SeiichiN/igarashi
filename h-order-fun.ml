@@ -97,3 +97,12 @@ let test34 = emphasize "Objective Caml" = "_Objective Caml_";;
   
 let concat_curry = fun s1 s2 -> s1 ^ s2 ^ s1;;
 
+let (^-^) x y = x * 2 + y * 3;;
+
+let test35 = 9 ^-^ 6 = 36;;
+
+let ( !! ) x = x + 1;;
+
+let test36 = !! 3 = 4;;
+let test37 = max !! 3 ~- 4 = 4;;
+
