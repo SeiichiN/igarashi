@@ -95,3 +95,5 @@ let emphasize = concat_curry "_";;
 
 let test34 = emphasize "Objective Caml" = "_Objective Caml_";;
   
+let concat_curry = fun s1 s2 -> s1 ^ s2 ^ s1;;
+
