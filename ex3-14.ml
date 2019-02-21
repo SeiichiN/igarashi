@@ -9,13 +9,41 @@ i 番目の台形の面積は
 ( f(a + (i-1)s) + f(a + is) ) * s / 2
 
  *)
-let abs x =
-  if x < 0 then -x
+let abs (x:float) =
+  if x < 0. then -1. *. x
   else x;;
-    
-let integral f =
-  (fun a ->
-   (fun b ->
-    let s = abs(a - b) / n in
-    let x = ((f (a + (i-1)*s)) + (f (a + i*s))) * s / 2 in
-   ) );;
+
+let n = 10;;
+
+let daikei (a, b, h) =
+  (a +. b) *. h /. 2.;;
+
+let test3 = daikei (2., 3., 4.) = 10.;;
+  
+let square x = x *. x;;
+
+let test4 = square 3. = 9.;;
+
+let rec sum_of (f, n) =
+  if n = 0 then 0.
+  else
+    sum_of (f, (n-1)) +. f ;;
+
+let test5 = sum_of ((square 2.), 3) = 12.;;
+
+let integral f a b =
+  let n = 100 in       (* 区間を100分割する *)
+  let abs (x:float) = if x < 0. then -1. *. x else x in
+    (* 100分割したうちの1区間の長さを求める *)
+  let s = abs(a -. b) /. (float_of_int n) in
+  let daikei (a, b, h) = (a +. b) *. h /. 2. in  (* 台形の面積 *)
+  let rec keisan i =
+    if i > n then 0.
+    else
+      let left = f (a +. float_of_int(i-1) *. s) in
+      let right = f (a +. (float_of_int i) *. s) in
+      keisan (i+1) +. daikei (left, right, s)
+  in
+  keisan 1;;
+
+let test6 = integral square 1.0 2.0 = 2.5;;  
