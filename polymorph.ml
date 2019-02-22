@@ -22,3 +22,13 @@ let id x = x;;
 
 let test6 = id 3 = 3;;
   
+
+
+ (* ------------ *)
+let average (a, b) =
+    (a +. b) /. 2.;;
+
+fun x -> average (x, 1.0);;
+
+let f = fun x -> (x, x);;
+
