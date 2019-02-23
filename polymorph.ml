@@ -32,3 +32,13 @@ fun x -> average (x, 1.0);;
 
 let f = fun x -> (x, x);;
 
+fun x -> ((let f = fun y -> (x, y) in f 4), x + 1);;
+(* - : int -> (int * int) * int = <fun> *)
+
+(* コンビネータ *)
+let k x y = x;;
+
+let const17 = k 17 in const17 4.0;;
+
+let s x y z = x z (y z);;
+
