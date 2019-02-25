@@ -96,4 +96,11 @@ let rec exists p = function
      else exists p rest;;
              
 let test34 = exists (fun x -> (x mod 7) = 0) [23; -98; 19; 53] = true;;
-  
+
+let rec fold_right f l e =
+    match l with
+    [] -> []
+  | v :: rest -> f v e :: fold_right f rest e;;
+
+  let test41 = fold_right (fun x y -> x + y) [3; 5; 7] 1 = [4; 6; 8];;
+
