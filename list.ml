@@ -102,5 +102,12 @@ let rec fold_right f l e =
     [] -> []
   | v :: rest -> f v e :: fold_right f rest e;;
 
-  let test41 = fold_right (fun x y -> x + y) [3; 5; 7] 1 = [4; 6; 8];;
+let test41 = fold_right (fun x y -> x + y) [3; 5; 7] 1 = [4; 6; 8];;
+
+let rec fold_left f l e =
+    match l with
+    [] -> []
+  | v :: rest -> fold_left f rest e :: f v e;;
+
+let test42 = fold_left (fun x -> x - y) [5; 7; 9] 1 = [4; 6; 8];;
 
