@@ -125,11 +125,32 @@ let length l = fold_right (fun x y -> 1 + y) l 0;;
 
 let test43 = length [1; 2; 3; 4] = 4;;
 
-let nth x l =
-    match l with
-    [] = 0
+let rec nth n l =
+    if n = 1 then
+        let a :: rest = l in a
+    else
+        let a :: rest = l  in nth (n-1) rest;;
+
 
 let test51 = nth 4 [1; 2; 3; 4; 5; 6] = 4;;
 let test52 = nth 1 [1; 2; 3; 4; 5; 6] = 1;;
 let test53 = nth 3 [2; 3; 4; 5; 6] = 4;;
+(* let test54 = nth 1 [] = 0;;  <== Exception *)
 
+let rec nth n l =
+    match n with
+    1 -> let a :: _ = l in a
+  | _ -> let _ :: rest = l in nth (n-1) rest;;
+
+let test54 = nth 4 [1; 2; 3; 4; 5; 6] = 4;;
+let test55 = nth 1 [1; 2; 3; 4; 5; 6] = 1;;
+let test56 = nth 3 [2; 3; 4; 5; 6] = 4;;
+
+let rec nth n l =
+    match (n, l) with
+    (1, a :: _) -> a
+  | (_, _ :: rest) -> nth (n-1) rest;;
+
+let test57 = nth 4 [1; 2; 3; 4; 5; 6] = 4;;
+let test58 = nth 1 [1; 2; 3; 4; 5; 6] = 1;;
+let test59 = nth 3 [2; 3; 4; 5; 6] = 4;;
