@@ -154,3 +154,22 @@ let rec nth n l =
 let test57 = nth 4 [1; 2; 3; 4; 5; 6] = 4;;
 let test58 = nth 1 [1; 2; 3; 4; 5; 6] = 1;;
 let test59 = nth 3 [2; 3; 4; 5; 6] = 4;;
+
+let rec nth n l =
+    match (n, l) with
+    (1, a :: _) -> a
+  | (n', _ :: rest) when  n' > 0 -> nth (n-1) rest;;
+
+let test60 = nth 4 [1; 2; 3; 4; 5; 6] = 4;;
+let test61 = nth 1 [1; 2; 3; 4; 5; 6] = 1;;
+let test62 = nth 3 [2; 3; 4; 5; 6] = 4;;
+
+let f = function
+    [] -> 0
+  | x :: rest when x > 0 -> 1
+  | x :: rest when x <= 0 -> 2;;
+
+let test63 = f [] = 0;;
+let test64 = f [1; 2; 3] = 1;;
+let test65 = f [-34; 2; 4] = 2;;
+
