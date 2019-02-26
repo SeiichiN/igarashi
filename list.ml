@@ -121,4 +121,15 @@ let rec fold_left f e l =
 
 let test43 = fold_left (fun x y -> y :: x) [] [1; 2; 3] = [3; 2; 1];;
   
+let length l = fold_right (fun x y -> 1 + y) l 0;;
+
+let test43 = length [1; 2; 3; 4] = 4;;
+
+let nth x l =
+    match l with
+    [] = 0
+
+let test51 = nth 4 [1; 2; 3; 4; 5; 6] = 4;;
+let test52 = nth 1 [1; 2; 3; 4; 5; 6] = 1;;
+let test53 = nth 3 [2; 3; 4; 5; 6] = 4;;
 
