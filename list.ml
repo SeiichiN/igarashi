@@ -146,6 +146,7 @@ let test54 = nth 4 [1; 2; 3; 4; 5; 6] = 4;;
 let test55 = nth 1 [1; 2; 3; 4; 5; 6] = 1;;
 let test56 = nth 3 [2; 3; 4; 5; 6] = 4;;
 
+
 let rec nth n l =
     match (n, l) with
     (1, a :: _) -> a
@@ -173,3 +174,70 @@ let test63 = f [] = 0;;
 let test64 = f [1; 2; 3] = 1;;
 let test65 = f [-34; 2; 4] = 2;;
 
+let f = function
+    [] -> 0
+  | x :: rest when x > 0 -> 1
+  | x :: rest (* when x <= 0 *) -> 2;;
+
+let test66 = f [] = 0;;
+let test67 = f [1; 2; 3] = 1;;
+let test68 = f [-34; 2; 4] = 2;;
+
+let f = function
+    [] -> 0
+  | x :: rest -> if x > 0 then 1 else 2;;
+
+
+let test69 = f [] = 0;;
+let test70 = f [1; 2; 3] = 1;;
+let test71 = f [-34; 2; 4] = 2;;
+  
+let rec nth n l =
+  match n with
+    1 -> ( match l with a :: _ -> a)
+  | n' when n' > 0 -> match l with _ :: rest -> nth (n-1) rest;;
+
+  (******** 連想リストと assoc関数 ****************)
+  "================== 連想リストと assoc関数 =====================";;
+    
+let city_phone = [("Kyoto", "075"); ("Osaka", "06"); ("Tokyo", "03")];;
+
+let rec assoc a = function
+    [] -> "Nothig"
+   |(a', b) :: rest -> if a = a' then b else assoc a rest;;
+
+let test81 = assoc "Osaka" city_phone = "06";;
+
+  "=================== 整列とアルゴリズム =========================";;
+  (*  *)
+    
+  let nextrand seed =
+    let a = 16807.0
+    and m = 2147483647.0 in
+    let t = a *. seed in
+    t -. m *. floor (t /. m)
+  let rec randlist n seed tail =
+    if n = 0 then (seed, tail)
+    else
+      randlist (n - 1) (nextrand seed) (seed::tail);;
+  (*
+tailには初期値として[]が与えられる。
+(seed::tail) で、seedのリストが作成される。
+最初は、(seed1::[]) で、[seed1] となる。
+次にそれが tail となって、(seed2::seed1) で、[seed2; seed1]となる。
+そして、それが、tail となる。
+   *)
+    
+  let rec insert x = function
+      [] -> [x]
+    | y :: rest when x < y -> x :: (y :: rest)
+    | y :: rest -> y :: (insert x rest);;
+
+  let test91 = insert 18.5 [-2.2; 9.1; 31.8] = [-2.2; 9.1; 18.5; 31.8];;
+  let test92 = insert 0.7 [] = [0.7];;
+    
+
+  let rec insertion_sort = function
+      [] -> []
+    | x :: rest -> insert x (insertion_sort rest);;
+    
