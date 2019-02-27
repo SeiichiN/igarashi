@@ -261,3 +261,9 @@ let rec quick_sort = function
            let (left, right) = partition pivot rest in
            quick_sort left @ (pivot :: quick_sort right);;
 
+let rec part pivot = function
+    [] -> ([], [])
+  | y :: rest ->
+     let (left, right) = part pivot rest in
+     (left, [pivot]);;
+  
