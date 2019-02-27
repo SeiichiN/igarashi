@@ -211,15 +211,15 @@ let test81 = assoc "Osaka" city_phone = "06";;
   "=================== 整列とアルゴリズム =========================";;
   (*  *)
     
-  let nextrand seed =
+let nextrand seed =
     let a = 16807.0
     and m = 2147483647.0 in
     let t = a *. seed in
     t -. m *. floor (t /. m)
-  let rec randlist n seed tail =
+let rec randlist n seed tail =
     if n = 0 then (seed, tail)
     else
-      randlist (n - 1) (nextrand seed) (seed::tail);;
+        randlist (n - 1) (nextrand seed) (seed::tail);;
   (*
 tailには初期値として[]が与えられる。
 (seed::tail) で、seedのリストが作成される。
@@ -228,16 +228,36 @@ tailには初期値として[]が与えられる。
 そして、それが、tail となる。
    *)
     
-  let rec insert x = function
-      [] -> [x]
-    | y :: rest when x < y -> x :: (y :: rest)
-    | y :: rest -> y :: (insert x rest);;
+let rec insert x = function
+    [] -> [x]
+   | y :: rest when x < y -> x :: (y :: rest)
+   | y :: rest -> y :: (insert x rest);;
 
-  let test91 = insert 18.5 [-2.2; 9.1; 31.8] = [-2.2; 9.1; 18.5; 31.8];;
-  let test92 = insert 0.7 [] = [0.7];;
-    
+let test91 = insert 18.5 [-2.2; 9.1; 31.8] = [-2.2; 9.1; 18.5; 31.8];;
+let test92 = insert 0.7 [] = [0.7];;
 
-  let rec insertion_sort = function
-      [] -> []
-    | x :: rest -> insert x (insertion_sort rest);;
+
+let rec insertion_sort = function
+    [] -> []
+   | x :: rest -> insert x (insertion_sort rest);;
     
+"============ Quick Sort ==================";;
+
+let rec partition pivot = function
+    [] -> ([], [])
+   | y :: rest ->
+           let (left, right) = partition pivot rest in
+           if pivot < y 
+           (* pivot が 最初の要素 y よりも小さい場合 *)
+           then (left, y::right)
+           else (y::left, right);;
+
+let test93 = partition 7.0 [9.0; 1.0; 5.0; 4.0; 18.0] =
+    ([1.; 5.; 4.], [9.; 18.]);;
+
+let rec quick_sort = function
+    [] -> []
+   | pivot :: rest -> 
+           let (left, right) = partition pivot rest in
+           quick_sort left @ (pivot :: quick_sort right);;
+
