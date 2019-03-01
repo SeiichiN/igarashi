@@ -264,11 +264,24 @@ let rec quick_sort = function
 let test94 = quick_sort [9.0; 1.0; 5.0; 4.0; 18.0] = 
     [1.0; 4.0; 5.0; 9.0; 18.0];;
 
-let part pivot = function
-    [] -> ([], [])
-  | y :: rest ->
-     let (left, right) = rest in
-     if pivot < y
-     then (left, y::right)
-     else (y::left, right);;
-  
+quick_sort (snd (randlist 10 1.0 []));;
+
+let rec partition left right pivot = function
+    [] -> (left, right)
+   | y :: rest ->
+           if pivot < y
+           then partition left (y::right) pivot rest
+           else partition (y::left) right pivot rest;;
+
+let test95 = partition [] [] 7.0 [9.0; 1.0; 5.0; 4.0; 18.0] =
+    ([4.; 5.; 1.], [18.; 9.]);;
+
+partition [] [] 7.0 [9.0; 1.0; 5.0; 4.0; 18.0] ;;
+
+let rec quick_sort = function
+    [] -> []
+   | pivot :: rest ->
+           let (left, right) = partition [] [] pivot rest in
+           quick_sort left @ (pivot :: quick_sort right);;
+
+
