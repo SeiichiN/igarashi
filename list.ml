@@ -261,19 +261,16 @@ let rec quick_sort = function
            let (left, right) = partition pivot rest in
            quick_sort left @ (pivot :: quick_sort right);;
 
-<<<<<<< HEAD
 let test94 = quick_sort [9.0; 1.0; 5.0; 4.0; 18.0] = 
     [1.0; 4.0; 5.0; 9.0; 18.0];;
 
-let rec part pivot = function
-=======
+(*
 let part pivot = function
->>>>>>> 9cd7f4724451159cb896c7706af14199f480b896
     [] -> ([], [])
   | y :: rest ->
      let (left, right) = rest in
      if pivot < y
      then (left, y::right)
      else (y::left, right);;
-  
+ *) 
   
