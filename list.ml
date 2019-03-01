@@ -264,7 +264,6 @@ let rec quick_sort = function
 let test94 = quick_sort [9.0; 1.0; 5.0; 4.0; 18.0] = 
     [1.0; 4.0; 5.0; 9.0; 18.0];;
 
-(*
 let part pivot = function
     [] -> ([], [])
   | y :: rest ->
@@ -272,5 +271,4 @@ let part pivot = function
      if pivot < y
      then (left, y::right)
      else (y::left, right);;
- *) 
   
