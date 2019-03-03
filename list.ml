@@ -285,3 +285,30 @@ let rec quick_sort = function
            quick_sort left @ (pivot :: quick_sort right);;
 
 
+let rec quick_sort = function
+    [] -> []
+  | pivot :: rest ->
+     let rec partition left right = function
+         (* pivot引数は不要 *)
+         [] -> (left, right)
+       | y :: ys -> if pivot < y
+                    then partition left (y :: right) ys
+                    else partition (y :: left) right ys
+     in
+     let (left, right) = partition [] [] rest in
+     (quick_sort left) @ (pivot :: quick_sort right);;
+  
+let rec quick_sort = function
+    ([] | [_]) as l -> l
+  | pivot :: rest ->
+     let rec partition left right = function
+         [] ->
+         (quick_sort left) @ (pivot :: quick_sort right)
+       | y :: ys -> if pivot < y
+                    then partition left (y :: right) ys
+                    else partition (y :: left) right ys
+     in
+     partition [] [] rest;;
+
+  quick_sort (snd (randlist 10 1.0 []));;
+         
