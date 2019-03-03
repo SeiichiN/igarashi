@@ -37,7 +37,9 @@ let rec assoc a = function
 let test81 = assoc 1000 romanlist1 = "M";;
 
 (*
-*
+* pick_roman -- n 回 moji を連続表示する
+* moji -- string ex."M", "D" ...
+* n    -- int number
 *)
 let rec pick_roman moji n =
   if n = 0 then ""
@@ -54,26 +56,21 @@ let test82 = pick_roman "M" 2 = "MM";;
 
 let roman l n =
   pick_roman "M" (n / 1000) ^
-     if ((n mod 1000) / 500) = 4
+     if ((n mod 1000) / 900) = 1
      then "CM"
-     else
-       pick_roman "D" ((n mod 1000) / 500) ^
+     else pick_roman "D" ((n mod 1000) / 500) ^
          if ((n mod 500) / 100) = 4
          then "CD"
-         else
-           pick_roman "C" ((n mod 500) / 100) ^
-             if ((n mod 100) / 50) = 4
+         else pick_roman "C" ((n mod 500) / 100) ^
+             if ((n mod 100) / 90) = 1
              then "CL"
-             else
-               pick_roman "L" ((n mod 100) / 50) ^
+             else pick_roman "L" ((n mod 100) / 50) ^
                  if ((n mod 50) / 10) = 4
                  then "IX"
-                 else
-                   pick_roman "X" ((n mod 50) / 10) ^
-                     if ((n mod 10) / 5) = 4
+                 else pick_roman "X" ((n mod 50) / 10) ^
+                     if ((n mod 10) / 9) = 1
                      then "IV"
-                     else
-                       pick_roman "V" ((n mod 10) / 5) ^
+                     else pick_roman "V" ((n mod 10) / 5) ^
                          pick_roman "I" (n mod 5);;
 
 let test83 = roman romanlist1 1984 = "MDCCCCLXXXIIII";;
@@ -82,7 +79,14 @@ let test84 = roman romanlist1 1987 = "MDCCCCLXXXVII";;
 let test85 = roman romanlist2 1984 = "MCMLXXXIV";;
 let test86 = roman romanlist2 1987 = "MCMLXXXVII";;
 
-
+let test87 = roman romanlist2 1900 = "MCM";;
+let test88 = roman romanlist2 1800 = "MDCCC";;
+let test88 = roman romanlist2 1700 = "MDCC";;
+let test88 = roman romanlist2 1600 = "MDC";;
+let test88 = roman romanlist2 1500 = "MD";;
+let test88 = roman romanlist2 1400 = "MCD";;
+let test88 = roman romanlist2 1300 = "MCCC";;
+  
   
 (*
 let roman l n =
