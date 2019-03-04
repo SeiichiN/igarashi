@@ -59,35 +59,35 @@ let roman l n =
    then pick_roman "M" (n / 1000)
    else "")
   ^
-    (let n = n mod 1000 in
-     if (n / 900) = 1
-     then let n = n - 900 in "CM"
-     else pick_roman "D" (n / 500))
+    (let n2 = n mod 1000 in 
+     if (n2 / 900) = 1
+     then "CM"
+     else pick_roman "D" (n2 / 500))
   ^
-    (let n = n mod 500 in       
-     if (n / 100) = 4
+    (let n2 = ((n mod 1000) mod 900) mod 500 in        
+     if (n2 / 100) = 4
      then "CD"
-     else pick_roman "C" (n / 100))
+     else pick_roman "C" (n2 / 100))
   ^
-    (let n = n mod 100 in
-     if (n / 90) = 1
-     then let n = n - 90 in "XC"
-     else pick_roman "L" (n / 50))
+    (let n2 = n mod 100 in
+     if (n2 / 90) = 1
+     then "XC"
+     else pick_roman "L" (n2 / 50))
   ^
-    (let n = n mod 50 in
-     if (n / 10) = 4
+    (let n2 = ((n mod 100) mod 90) mod 50 in
+     if (n2 / 10) = 4
      then "XL"
-     else pick_roman "X" (n / 10))
+     else pick_roman "X" (n2 / 10))
   ^
-    (let n = n mod 10 in
-     if (n / 9) = 1
-     then let n = n - 9 in "IX"
-     else pick_roman "V" (n / 5))
+    (let n2 = n mod 10 in
+     if (n2 / 9) = 1
+     then "IX"
+     else pick_roman "V" (n2 / 5))
   ^
-    (let n = n mod 5 in
-     if n = 4
+    (let n2 = ((n mod 10) mod 9) mod 5 in
+     if n2 = 4
      then "IV"
-     else pick_roman "I" n);;
+     else pick_roman "I" n2);;
 
 let test83 = roman romanlist1 1984 = "MCMLXXXIV";;
 let test84 = roman romanlist1 1987 = "MCMLXXXVII";;
