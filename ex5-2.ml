@@ -18,7 +18,7 @@ I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000
 - : string = "MDCCCCLXXXIIII"
 となる。
 また、4, 9, 40, 90, 400, 900 などの表現にも注意して、
-# roman [(1000, "M"); (900, "CM"); (500, "D"); (400, "CD"); (100, "C"); (90, "XC"); 
+# roman [(1000, "M"); (900, "DM"); (500, "D"); (400, "CD"); (100, "C"); (90, "XC"); 
 (50, "L"); (40, "XL"); (10, "X"); (9, "IX"); (5, "V"); (4, "IV"); (1, "I")] 1984;;
 - : string ="MCMLXXXIV"
 となるようにせよ。
@@ -55,26 +55,42 @@ let test82 = pick_roman "M" 2 = "MM";;
  *)
 
 let roman l n =
-  pick_roman "M" (n / 1000) ^
-     if ((n mod 1000) / 900) = 1
-     then "CM"
-     else pick_roman "D" ((n mod 1000) / 500) ^
-         if ((n mod 500) / 100) = 4
-         then "CD"
-         else pick_roman "C" ((n mod 500) / 100) ^
-             if ((n mod 100) / 90) = 1
-             then "CL"
-             else pick_roman "L" ((n mod 100) / 50) ^
-                 if ((n mod 50) / 10) = 4
-                 then "IX"
-                 else pick_roman "X" ((n mod 50) / 10) ^
-                     if ((n mod 10) / 9) = 1
-                     then "IV"
-                     else pick_roman "V" ((n mod 10) / 5) ^
-                         pick_roman "I" (n mod 5);;
+  (if ((n / 1000) > 0)
+   then pick_roman "M" (n / 1000)
+   else "")
+  ^
+    (let n = n mod 1000 in
+     if (n / 900) = 1
+     then let n = n - 900 in "CM"
+     else pick_roman "D" (n / 500))
+  ^
+    (let n = n mod 500 in       
+     if (n / 100) = 4
+     then "CD"
+     else pick_roman "C" (n / 100))
+  ^
+    (let n = n mod 100 in
+     if (n / 90) = 1
+     then let n = n - 90 in "XC"
+     else pick_roman "L" (n / 50))
+  ^
+    (let n = n mod 50 in
+     if (n / 10) = 4
+     then "XL"
+     else pick_roman "X" (n / 10))
+  ^
+    (let n = n mod 10 in
+     if (n / 9) = 1
+     then let n = n - 9 in "IX"
+     else pick_roman "V" (n / 5))
+  ^
+    (let n = n mod 5 in
+     if n = 4
+     then "IV"
+     else pick_roman "I" n);;
 
-let test83 = roman romanlist1 1984 = "MDCCCCLXXXIIII";;
-let test84 = roman romanlist1 1987 = "MDCCCCLXXXVII";;
+let test83 = roman romanlist1 1984 = "MCMLXXXIV";;
+let test84 = roman romanlist1 1987 = "MCMLXXXVII";;
 
 let test85 = roman romanlist2 1984 = "MCMLXXXIV";;
 let test86 = roman romanlist2 1987 = "MCMLXXXVII";;
@@ -86,6 +102,7 @@ let test88 = roman romanlist2 1600 = "MDC";;
 let test88 = roman romanlist2 1500 = "MD";;
 let test88 = roman romanlist2 1400 = "MCD";;
 let test88 = roman romanlist2 1300 = "MCCC";;
+let test89 = roman romanlist2 89 = "LXXXIX";;
   
   
 (*
@@ -100,3 +117,19 @@ let roman l n =
   assoc 1000
  *)
 
+let renketsu a b =
+  (if a = 1
+  then "A"
+  else "B")
+       ^
+         (if b = 1
+         then "X"
+         else "Y");;
+
+let test101 = renketsu 1 1 = "AX";;
+let test102 = renketsu 1 2 = "AY";;
+let test103 = renketsu 0 1 = "BX";;
+let test104 = renketsu 2 1 = "BX";;
+let test105 = renketsu 2 2 = "BY";;
+  
+  
