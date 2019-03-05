@@ -28,3 +28,31 @@ let test1 = zip [2; 3; 4; 5; 6; 7; 8; 9; 10; 11]
 let test2 = zip [1; 2; 3; 4; 5] ['a'; 'b'; 'c'; 'd'] =
     [(1, 'a'); (2, 'b'); (3, 'c'); (4, 'd')];;
 
+let test3 = zip [1; 2; 3; 4] ['a'; 'b'; 'c'; 'd'; 'e'] =
+    [(1, 'a'); (2, 'b'); (3, 'c'); (4, 'd')];;
+
+
+(* 練習問題 5.2.6 *)
+
+(*
+ * ペアのリスト [(a1, b1); ...; (an, bn)] を引数として、
+ * リストのペア ([a1; ...; an], [b1; ...; bn]) を返す
+ * 関数 unzip
+ *
+ * # unzip;;
+ * - : ('a * 'b) list -> 'a list * 'b list = <fun>
+ *)
+
+let rec unzip = function
+    [] -> ([], [])
+    | (a, b) :: rest ->
+            (a, b) :: unzip rest;; 
+
+let test11 = unzip ([(1, 'a'); (2, 'b'); (3, 'c'); (4, 'd')]) =
+    ([1; 2; 3; 4], ['a'; 'b'; 'c'; 'd']);;
+
+
+let test12 = unzip (zip [2; 3; 4; 5; 6; 7; 8; 9; 10; 11]
+[true; true; false; true; false; true; false; false; false; true]) =
+    ([2; 3; 4; 5; 6; 7; 8; 9; 10; 11],
+    [true; true; false; true; false; true; false; false; false; true])
