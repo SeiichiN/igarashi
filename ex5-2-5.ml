@@ -45,8 +45,12 @@ let test3 = zip [1; 2; 3; 4] ['a'; 'b'; 'c'; 'd'; 'e'] =
 
 let rec unzip = function
     [] -> ([], [])
-    | (a, b) :: rest ->
-            (a, b) :: unzip rest;; 
+    | (a, b) :: rest -> 
+            match rest with
+            [] -> ([], [])
+    | (x, y) :: rest2 ->
+            (a :: x, b :: y) 
+             unzip rest;; 
 
 let test11 = unzip ([(1, 'a'); (2, 'b'); (3, 'c'); (4, 'd')]) =
     ([1; 2; 3; 4], ['a'; 'b'; 'c'; 'd']);;
