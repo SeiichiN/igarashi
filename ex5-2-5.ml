@@ -43,14 +43,11 @@ let test3 = zip [1; 2; 3; 4] ['a'; 'b'; 'c'; 'd'; 'e'] =
  * - : ('a * 'b) list -> 'a list * 'b list = <fun>
  *)
 
-let rec unzip = function
-    [] -> ([], [])
-    | (a, b) :: rest -> 
-            match rest with
-            [] -> ([], [])
-    | (x, y) :: rest2 ->
-            (a :: x, b :: y) 
-             unzip rest;; 
+let rec unzip l = 
+    match l with
+    ([], []) -> ([], [])
+    | (a, b) :: (rest1, rest2) -> 
+            ([a], [b]) :: unzip (rest1, rest2);;
 
 let test11 = unzip ([(1, 'a'); (2, 'b'); (3, 'c'); (4, 'd')]) =
     ([1; 2; 3; 4], ['a'; 'b'; 'c'; 'd']);;
