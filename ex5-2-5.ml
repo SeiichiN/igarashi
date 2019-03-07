@@ -45,9 +45,9 @@ let test3 = zip [1; 2; 3; 4] ['a'; 'b'; 'c'; 'd'; 'e'] =
 
 let rec unzip l = 
     match l with
-    ([], []) -> ([], [])
-    | (a, b) :: (rest1, rest2) -> 
-            ([a], [b]) :: unzip (rest1, rest2);;
+    [] -> ([], [])
+    | (a, b) :: rest -> 
+            let (x, y) = unzip rest in (a :: x, b :: y);;
 
 let test11 = unzip ([(1, 'a'); (2, 'b'); (3, 'c'); (4, 'd')]) =
     ([1; 2; 3; 4], ['a'; 'b'; 'c'; 'd']);;
