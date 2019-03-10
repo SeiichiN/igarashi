@@ -22,3 +22,23 @@ let rec quick_sort = function
 
 let test2 = quick_sort [9.0; 1.0; 5.0; 4.0; 18.0] =
     [1.0; 4.0; 5.0; 9.0; 18.0];;
+
+
+(* --------------------------------------------------- *)
+
+let rec partition left right pivot = function
+    [] -> (left, right)
+    | y :: rest ->
+            if pivot < y
+            then partition left (y::right) pivot rest
+            else partition (y::left) right pivot rest;;
+
+let rec quick_sort = function
+    [] -> []
+    | pivot :: rest ->
+            let (left, right) = partition [] [] pivot rest in
+            quick_sort left @ (pivot :: quick_sort right);;
+
+
+let test3 = quick_sort [9.0; 1.0; 5.0; 4.0; 18.0] =
+    [1.0; 4.0; 5.0; 9.0; 18.0];;
