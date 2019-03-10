@@ -6,39 +6,34 @@
  *)
 
 (*
-let rect x y = x*x + y*y;;
-
-let test1 = rect 2 3 = 13;;
-
-let sec limit =
-    let rec kei x y =
-        let d_x = x in
-        if x*x + y*y <= limit
-    then kei x+1 y
-    else kei d_x y+1
-    in
-    kei 1 1;;
-*)
-
+ * リスト l は、(x, y)の組のリストである。
+ * その中に、(x, y) = (y, x) であるリストは重複しているとして省きたい。
+ * そのため、組(a, b) について、 リストの中に重複しているものがあるかどうかを調べる関数
+ *)
+let rec find (a, b) l =
+    match l with
+        [] -> false
+    | (x, y) :: rest ->
+            if ((b, a) = (x, y))
+            then true
+            else find (a, b) rest;;
 
 let squares r =
     let rec keisan (x, y) ac =
-        let def_x = x in
         let res = x * x + y * y in
         if res <= r
         then
             if res = r
-            then keisan (x+1, y) ((x, y) :: ac)
+            then
+                if find (x, y) ac
+                then keisan (x+1, y) ac
+                else keisan (x+1, y) ((x, y) :: ac)
             else keisan (x+1, y) ac
         else
-            let x = def_x in
-            if res <=r
-            then
-                if res =r
-                then keisan (x, y+1) ((x, y) :: ac)
-                else keisan (x, y+1) ac
+            if y*y < r
+            then keisan (1, y+1) ac
             else
-            ac
+                ac
     in
     keisan (1, 1) [];;
 
