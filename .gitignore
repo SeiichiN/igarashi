@@ -1,2 +1,10 @@
 *.ml~
+*.swp
+*.cmi
+*.cmo
+*.cmx
+*.o
+downto1
+fact10
+hello
 
