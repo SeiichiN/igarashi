@@ -2,7 +2,7 @@
 (*
  * リストと、リストの要素上の述語pを満たすすべての要素のリストを返す関数 filter
  *
- * # filster;;
+ * # filter;;
  * - : ('a -> bool) -> a' list -> 'a list = <fun>
  *)
 
