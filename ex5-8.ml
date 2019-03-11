@@ -10,3 +10,15 @@ let rec map f = function
   | v :: rest -> f v :: map f rest;;
   
 let test1 = map (fun x -> x * 2) [4; 91; 0; -34] = [8; 182; 0; -68];;
+
+let rec fold_right f l e =
+    match l with
+    [] -> e
+  | v :: rest -> fold_right f rest ((f v) :: e);;
+
+let twice x = x * 2;;
+
+let mylist = [1; 2; 3];;
+
+let test2 = fold_right twice mylist [] = [2; 4; 6];;
+
