@@ -118,5 +118,8 @@ let rec add m n =
     | OneMoreThan m' ->
             OneMoreThan (add m' n);;
 
+(* 整数リスト *)
+type intlist = INil | ICons of int * intlist;;
+
 
 
