@@ -55,7 +55,9 @@ let c = Circle 3;;
 
 let figs = [Point; Square 5; Rectangle (4, 5); c];;
 
+let figs2 = [Rectangle (3, 6)];;
 
+(* 面積を求める *)
 let area_of_figure = function
     Point -> 0
     | Circle r -> r * r * 3
@@ -76,6 +78,9 @@ area_of_figure c;;
 
 map area_of_figure figs;;
 
+map area_of_figure figs2;;
+
+(* 相似形 *)
 let similar x y =
     match (x, y) with
     (Point, Point) | (Circle _, Circle _) | (Square _, Square _) ->true
@@ -84,5 +89,34 @@ let similar x y =
     | _ -> false;;
 
 similar (Rectangle (2, 4)) (Rectangle (1, 2));;
+
+similar (Circle 3) (Circle 5);;
+
+(* 列挙型 *)
+type color = White | Black | Blue | Green | Red | Magenta | Yellow | Cyan;;
+
+let reverse_color = function
+    White -> Black | Black -> White | Blue -> Yellow | Yellow -> Blue | Red -> Cyan | Cyan -> Red | Magenta -> Green | Green -> Magenta;;
+
+reverse_color Cyan;;
+
+(* 再帰ヴァリアント型 *)
+
+(* 自然数の定義 *)
+(*
+ * ゼロは自然数である。
+ * 自然数に 1 足した数は自然数である。
+ *)
+type nat = Zero | OneMoreThan of nat;;
+
+let zero = Zero
+and two = OneMoreThan (OneMoreThan Zero);;
+
+let rec add m n =
+    match m with
+    Zero -> n
+    | OneMoreThan m' ->
+            OneMoreThan (add m' n);;
+
 
 
