@@ -122,4 +122,7 @@ let rec add m n =
 type intlist = INil | ICons of int * intlist;;
 
 
+(* kisuu & guusuu *)
+type even = Zero | OMT_E of odd (* OMT -- OneMoreThan *)
+and odd = OMT_O of even;;
 
