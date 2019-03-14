@@ -152,4 +152,7 @@ let fact n =
     in
     if n < 0 then None else Some (fact' n);;
 
+type ('a, 'b) sum = Left of 'a | Right of 'b;;
+
+[Left 1; Right "foo"];;
 
