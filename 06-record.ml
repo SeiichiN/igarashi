@@ -126,3 +126,7 @@ type intlist = INil | ICons of int * intlist;;
 type even = Zero | OMT_E of odd (* OMT -- OneMoreThan *)
 and odd = OMT_O of even;;
 
+let rec o_plus_e (OMT_O e1) e2 = OMT_O (e_plus_e e1 e2) 
+and e_plus_e e1 e2 =
+    match e1 with Zero -> e2 | OMT_E o -> OMT_E (o_plus_e o e2);;
+
