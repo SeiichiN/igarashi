@@ -140,4 +140,16 @@ type 'a mylist = Nil | Cons of 'a * 'a mylist;;
 
 type 'a with_location = { loc_x: float; loc_y: float; body: 'a };;
 
+type ('a, 'b) list_with_tail =
+    Nil of 'b | Cons of 'a * ('a, 'b) list_with_tail;;
+
+type 'a option = None | Some of 'a;;
+
+(* 負の引数が与えられた場合は None を返す関数 *)
+let fact n =
+    let rec fact' n = 
+        if n = 0 then 1 else n * fact' (n-1) 
+    in
+    if n < 0 then None else Some (fact' n);;
+
 
