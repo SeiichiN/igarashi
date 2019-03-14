@@ -130,3 +130,14 @@ let rec o_plus_e (OMT_O e1) e2 = OMT_O (e_plus_e e1 e2)
 and e_plus_e e1 e2 =
     match e1 with Zero -> e2 | OMT_E o -> OMT_E (o_plus_e o e2);;
 
+let one = OMT_O Zero;;
+let two = OMT_E one;;
+let three = OMT_O two;;
+let four = OMT_E three;;
+
+(* 多相的なリスト *)
+type 'a mylist = Nil | Cons of 'a * 'a mylist;;
+
+type 'a with_location = { loc_x: float; loc_y: float; body: 'a };;
+
+
