@@ -62,4 +62,53 @@ let rec preord t l =
     | Br (x, left, right) ->
             x :: (preord left (preord right l));;
 
+(* 二分探索木 *)
+(* ある要素が木の中にあるかどうかを問い合わせる *)
+let rec mem t x =
+    match t with
+    Lf -> false
+    | Br (y, left, right) ->
+            if x = y then true
+            else
+                if x < y then mem left x
+                else mem right x;;
+
+(* 要素を木に追加する *)
+let rec add t x =
+    match t with
+    Lf -> Br (x, Lf, Lf)
+    | (Br (y, left, right) as whole) when x = y -> whole
+    | Br (y, left, right) when x < y -> Br (y, add left x, right)
+    | Br (y, left, right) -> Br (y, left, add right x);;
+
+(* バラの木 *)
+type 'a rosetree = RLf | RBr of 'a * 'a rosetree list;;
+
+(* XML *)
+(* 葉の部分にもデータを格納できるようにする *)
+(*
+ * 'a -- タグを表現するデータの型
+ * 'b -- 葉に格納するデータの型
+ *)
+type ('a, 'b) xml = XLf of 'b option | XBr of 'a * ('a, 'b) xml list;;
+
+(* アドレス帳 *)
+let addressbook =
+    XBr ("addressbook", [
+        XBr ("person", [
+            XBr ("name", [XLf (Some "Atsushi Igarashi")]);
+            XBr ("tel", [XLf (Some "075-123-4567")])]);
+        XBr ("person", [XLf None]);
+        XBr ("person", [XLf None])]);;
+
+(* 文字列に変換する *)
+let rec string_of_xml = function
+    XBr (tag, xml_list) -> "<" ^ tag ^ ">" ^
+    string_of_xmllist xml_list ^
+    "</" ^ tag ^ ">"
+    | XLf None -> ""
+    | XLf (Some s) -> s
+and string_of_xmllist = function
+    [] -> ""
+    | xml :: rest -> string_of_xml xml ^ string_of_xmllist rest;;
 
