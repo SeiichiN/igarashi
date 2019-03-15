@@ -112,3 +112,33 @@ and string_of_xmllist = function
     [] -> ""
     | xml :: rest -> string_of_xml xml ^ string_of_xmllist rest;;
 
+let rec map f = function
+    [] -> []
+  | v :: rest -> f v :: map f rest;;
+
+(* 二分木をバラの木に変換する *)
+let rec rosetree_of_tree = function
+    Lf -> RLf
+    | Br(a, left, right) ->
+            RBr(a, map rosetree_of_tree [left; right]);;
+
+(* 単独のバラの木を二分木に変換する *)
+let rec tree_of_rtree = function
+    RLf -> Br (None, Lf, Lf)
+    | RBr (a, rtrees) -> Br (Some a, tree_of_rtreelist rtrees, Lf)
+and tree_of_rtreelist = function
+    [] -> Lf
+    | rtree :: rest ->
+            let Br (a, left, Lf) = tree_of_rtree rtree in
+            Br (a, left, tree_of_rtreelist rest);;
+
+(* 実行例 *)
+let rtree =
+    RBr ("a", [
+        RBr ("b", [
+            RBr ("c", [RLf]);
+            RLf;
+            RBr ("d", [RLf])]);
+        RBr ("e", [RLf]);
+        RBr ("f", [RLf])]);;
+
