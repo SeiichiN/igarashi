@@ -9,8 +9,7 @@
 
 (* 図形をあらわすヴァリアント *)
 type figure =
-    Point
-    | Circle of int
+    Circle of int
     | Rectangle of int * int
     | Square of int;;
 
@@ -33,24 +32,38 @@ let abs (x: float) =
     if x < 0. then -1. *. x else x;;
 
 let overlap a b =
-    match (a.body, b.body) with
-    Point, Point -> true
-    | Circle c1, Circle c2 ->
-            let d1 = float_of_int c1 in
-            let d2 = float_of_int c2 in
-            if (joh(a.loc_x -. b.loc_x) +. joh(a.loc_y -. b.loc_y))
-            < joh(d1 +. d2)
-            then true
-            else false
-    | Rectangle (l1, l2), Rectangle (l3, l4) ->
-            let d1 = float_of_int l1 in
-            let d2 = float_of_int l2 in
-            let d3 = float_of_int l3 in
-            let d4 = float_of_int l4 in
-            if (abs(a.loc_x -. b.loc_x) < (d1 +. d3) /. 2.) &&
-            (abs(a.loc_y -. b.loc_y) < (d2 +. d4) /. 2.) 
-            then true
-            else false;;
+  match (a.body, b.body) with
+    Circle c1, Circle c2 ->
+    let d1 = float_of_int c1 in
+    let d2 = float_of_int c2 in
+    if (joh(a.loc_x -. b.loc_x) +. joh(a.loc_y -. b.loc_y))
+       < joh(d1 +. d2)
+    then true
+    else false
+  | Rectangle (l1, l2), Rectangle (l3, l4) ->
+     let d1 = float_of_int l1 in
+     let d2 = float_of_int l2 in
+     let d3 = float_of_int l3 in
+     let d4 = float_of_int l4 in
+     if (abs(a.loc_x -. b.loc_x) < (d1 +. d3) /. 2.) &&
+          (abs(a.loc_y -. b.loc_y) < (d2 +. d4) /. 2.) 
+     then true
+     else false
+  | Square l1, Square l2 ->
+     let d1 = float_of_int l1 in
+     let d2 = float_of_int l2 in
+     if (abs(a.loc_x -. b.loc_x) < (d1 +. d2) /. 2.) &&
+          (abs(a.loc_y -. b.loc_y) < (d1 +. d2) /. 2.)
+     then true
+     else false;;
+
+(* すべての組み合わせを網羅するような関数を作りたかったが、よくわからなかった。
+let overlap a b =
+  match (a.body, b.body) with
+    ((Square k1, (Circle k3 | Square k3 | Rectangle (l3, l4)))|
+     (Circle k1, (Circle k3 | Square k3 | Rectangle (l3, l4)))|
+     (Rectangle (l1, l2) (Circle k3 | Square k3 | Rectangle (l3, l4)))) ->
+ *)    
 
 let cir1 = { loc_x = 3.; loc_y = 3.; body = Circle 2 };;
 let cir2 = { loc_x = 1.; loc_y = 1.; body = Circle 3 };;
