@@ -40,8 +40,8 @@ let rec mul m n =
 ・自然数 m からゼロをひくと m である。
 ・n より 1 大きい数を m から引いたものは、m から n 引いた数に 1 足したものである。
  *)
-let rec monus m n =
-  match n with
-    Zero -> monus m zero
-  | OMT n' -> monus m n';;
+let rec monus m (n: nat) =
+  match m with
+    Zero -> zero
+  | OMT m' -> OMT (monus m' n);;
   
