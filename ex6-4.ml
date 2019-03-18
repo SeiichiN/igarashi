@@ -1,3 +1,5 @@
+
+
 (* 練習問題 6.4 *)
 
 (*
@@ -15,24 +17,6 @@ let four = OMT three;;
 let five = OMT four;;
 let six = OMT five;;
 
-(*
-足し算の定義：
-・ゼロに自然数 n を足したものは n である。
-・m より 1 大きい数に n を足したものは、m と n を足したものより 1 大きい数である。
- *)
-let rec add m n =
-  match m with
-    Zero -> n
-  | OMT m' -> OMT (add m' n);;
-
-(* 整数リスト *)
-type intlist = INil | ICons of int * intlist;;
-
-(* 掛け算 *)  
-let rec mul m n =
-  match n with
-    Zero -> zero
-  | OMT n' -> add (mul m n') m;;
   
 (* 引き算 *)
 (*
@@ -48,4 +32,10 @@ let rec monus m n =
 (*
  * 上の monus 関数を改造して、引き算の答えが負になるような場合には None を返す nat -> nat -> nat option 型の関数 minus を定義しなさい。
  *)
+
+let rec minus m n =
+  match (m, n) with
+    (Zero, _) -> None 
+  | (_, Zero) -> Some m
+  | (OMT m', OMT n') -> minus m' n';;
 
