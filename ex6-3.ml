@@ -36,12 +36,12 @@ let rec mul m n =
   
 (* 引き算 *)
 (*
-引き算の定義：
-・自然数 m からゼロをひくと m である。
-・n より 1 大きい数を m から引いたものは、m から n 引いた数に 1 足したものである。
+ここを見た：
+http://gifnksm.hatenablog.jp/category/OCaml?page=1205602283
  *)
-let rec monus m (n: nat) =
-  match m with
-    Zero -> zero
-  | OMT m' -> OMT (monus m' n);;
+let rec monus m n =
+  match (m, n) with
+    (Zero, _) -> zero
+  | (_, Zero) -> m
+  | (OMT m', OMT n') -> monus m' n';;
   
