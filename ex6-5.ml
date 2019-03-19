@@ -18,9 +18,9 @@ comptree の例
  *)
           
 let comptree' n =
-  let rec comptree'_in x n =
+  let rec comptree_in x n =
     if n = 0 then Lf
-    else Br (x, (comptree'_in (2 * (n-1) + 1) (n-1)), (comptree'_in (2 * (n-1)) (n-1)))
-  in
-  comptree'_in 1 n;;
+    else Br ((n-1), (comptree_in (2 * (n-1) + 1) (n-1)), (comptree_in (2 * (n-1)) (n-1)))
+  in 
+  comptree_in 1 n;;
   
