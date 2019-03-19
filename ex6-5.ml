@@ -27,7 +27,7 @@ let joh x n =
 let comptree' n =
   let rec comptree_in x n =
     if n = 0 then Lf
-    else Br ((joh 2 (n-1)), (comptree_in ((joh 2 n) + 1) (n-1)), (comptree_in (joh 2 n) (n-1)))
+    else Br (x, (comptree_in ((joh 2 (n-1)) + 1) (n-1)), (comptree_in (joh 2 (n-1)) (n-1)))
   in 
   comptree_in 1 n;;
   
