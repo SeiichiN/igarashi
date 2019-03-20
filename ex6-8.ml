@@ -62,3 +62,16 @@ let rtree =
         RBr ("e", [RLf]);
         RBr ("f", [RLf])]);;
 
+let thetree = 
+    Br (Some "a",
+    Br (Some "b",
+    Br (Some "c", Br (None, Lf, Lf),
+    Br (None, Lf, Br (Some "d", Br (None, Lf, Lf), Lf))),
+    Br (Some "e", Br (None, Lf, Lf),
+    Br (Some "f", Br (None, Lf, Lf), Lf))),
+    Lf);;
+
+(*  *)
+let rec rtree_of_tree = function
+    Lf -> RLf
+    | Br (
