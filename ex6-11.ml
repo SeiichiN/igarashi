@@ -10,3 +10,23 @@
 
 簡単だと思う人は、string_of_arith の出力結果のカッコを減らすように工夫しなさい。
 *)
+
+type arith =
+    Const of int |Add of arith * arith | Mul of arith * arith;;
+
+let exp = Mul (Add ( Const 3, Const 4), Add ( Const 2, Const 5));;
+
+let rec eval siki =
+    match siki with
+    Const v -> v
+    | Add (v1, v2) -> eval v1 + eval v2
+    | Mul (v1, v2) -> eval v1 * eval v2;;
+
+let test1 = eval exp = 49;;
+
+let rec string_of_arith e =
+    match e with
+    Const v -> string_of_int v
+    | Add (v1, v2) -> "(" ^ string_of_arith v1 ^ "+" ^ string_of_arith v2 ^ ")"
+    | Mul (v1, v2) -> "(" ^ string_of_arith v1 ^ "*" ^ string_of_arith v2 ^ ")";;
+
