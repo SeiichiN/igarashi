@@ -30,3 +30,13 @@ let rec string_of_arith e =
     | Add (v1, v2) -> "(" ^ string_of_arith v1 ^ "+" ^ string_of_arith v2 ^ ")"
     | Mul (v1, v2) -> "(" ^ string_of_arith v1 ^ "*" ^ string_of_arith v2 ^ ")";;
 
+let expand e =
+    match e with
+    Const v -> Const v
+    | Add (v1, v2) -> Add (v1, v2)
+    | Mul (v1, v2) -> 
+            match (v1, v2) with
+            (Add(x1, x2), Add(y1, y2)) ->
+                Add( Add (Mul (x1, y1), Mul (x1, y2)),
+                     Add (Mul (x2, y1), Mul (x2, y2)));;
+
