@@ -11,7 +11,7 @@
 - : string rosetree =
     RBr ("a", [RBr ("b", [RBr ("c", [RLf]); RLf; RBr ("d", [RLf])]); RBr ("e", [RLf]); RBr ("f", [RLf])])
     
-# rtree_of_tree (tree_of_rtree tree);;
+# rtree_of_tree (tree_of_rtree rtree);;
 -: sring rosetree =
     RBr ("a", [RBr ("b", [RBr ("c", [RLf]); RLf; RBr ("d", [RLf])]); RBr ("e", [RLf]); RBr ("f", [RLf])])
 *)
@@ -21,13 +21,6 @@
 (* 定義 *)
 type 'a tree = Lf | Br of 'a * 'a tree * 'a tree;;
 
-(* 完全木 *)
-let comptree = Br(1, Br(2, Br(4, Lf, Lf),
-Br(5, Lf, Lf)), Br(3, Br(6, Lf, Lf),
-Br(7, Lf, Lf)));;
-
-
-let mytree = Br('a', Br('b', Lf, Lf), Br('c', Br('d', Lf, Lf), Br('e', Lf, Lf)));;
 
 (* バラの木 *)
 type 'a rosetree = RLf | RBr of 'a * 'a rosetree list;;
@@ -64,14 +57,23 @@ let rtree =
 
 let thetree = 
     Br (Some "a",
-    Br (Some "b",
-    Br (Some "c", Br (None, Lf, Lf),
-    Br (None, Lf, Br (Some "d", Br (None, Lf, Lf), Lf))),
-    Br (Some "e", Br (None, Lf, Lf),
-    Br (Some "f", Br (None, Lf, Lf), Lf))),
-    Lf);;
+     Br (Some "b",
+      Br (Some "c", Br (None, Lf, Lf),
+       Br (None, Lf, Br (Some "d", Br (None, Lf, Lf), Lf))),
+      Br (Some "e", Br (None, Lf, Lf),
+       Br (Some "f", Br (None, Lf, Lf), Lf))),
+     Lf);;
 
-(*  *)
+(* 解答 *)
 let rec rtree_of_tree = function
     Lf -> RLf
-    | Br (
+    | Br (None, left, right) ->
+            RBr (None, map rtree_of_tree [left; right])
+    | Br (Some a, left, right) ->
+            RBr (Some a, map rtree_of_tree [left; right]);;
+
+let rtree = 
+    RBr ("a", [RBr ("b", [RBr ("c", [RLf]); RLf; RBr ("d", [RLf])]); RBr ("e", [RLf]); RBr ("f", [RLf])]);;
+    
+let test1 = rtree_of_tree (tree_of_rtree rtree) = 
+    RBr ("a", [RBr ("b", [RBr ("c", [RLf]); RLf; RBr ("d", [RLf])]); RBr ("e", [RLf]); RBr ("f", [RLf])])
