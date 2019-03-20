@@ -76,4 +76,13 @@ let rtree =
     RBr ("a", [RBr ("b", [RBr ("c", [RLf]); RLf; RBr ("d", [RLf])]); RBr ("e", [RLf]); RBr ("f", [RLf])]);;
     
 let test1 = rtree_of_tree (tree_of_rtree rtree) = 
-    RBr ("a", [RBr ("b", [RBr ("c", [RLf]); RLf; RBr ("d", [RLf])]); RBr ("e", [RLf]); RBr ("f", [RLf])])
+    RBr (Some "a",
+ [RBr (Some "b",
+   [RBr (Some "c",
+      [RBr (None, [RLf; RLf]);
+            RBr (None,
+                   [RLf; RBr (Some "d", [RBr (None, [RLf; RLf]); RLf])])]);
+                       RBr (Some "e",
+                            [RBr (None, [RLf; RLf]);
+                                  RBr (Some "f", [RBr (None, [RLf; RLf]); RLf])])]);
+                                    RLf])
