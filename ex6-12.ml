@@ -5,50 +5,9 @@
 *)
 
 (* 二分木 *)
-
 (* 定義 *)
-type tree =
-    Lf 
-    | Br of {
-        mutable v: int;
-        mutable left: tree;
-        mutable right: tree;
-    };;
+type 'a tree = Lf | Br of 'a * 'a tree * 'a tree;;
 
-(*
-let chartree = Br ('a', Br ('b', Br ('d', Lf, Lf), Lf), 
-Br ('c', Br ('e', Lf, Lf), Br ('f', Lf, Lf)));;
-*)
-
-(* サイズ *)
-let rec size = function
-    Lf -> 0
-    | Br {v; left; right} ->
-            1 + size left + size right;;
-
-(* 深さ *)
-let rec depth = function
-    Lf -> 0
-    | Br {v; left; right} ->
-            1 + max(depth left) (depth right);;
-
-(* test *)
-let testtree = Br{v = 1; left = Lf; right = Lf};;
-
-(* 完全木 *)
-let comptree = 
-    Br{v=1; 
-      left=Br{v=2; 
-            left=Br{v=4; left=Lf; right=Lf};
-            right=Br{v=5; left=Lf; right=Lf}}; 
-      right=Br{v=3;
-            left=Br{v=6; left=Lf; right=Lf};
-            right=Br{v=7; left=Lf; right=Lf}}};;
-
-
-(*
-let mytree = Br('a', Br('b', Lf, Lf), Br('c', Br('d', Lf, Lf), Br('e', Lf, Lf)));;
-*)
 
 (* 要素を木に追加する *)
 let rec add t x =
@@ -60,7 +19,15 @@ let rec add t x =
 
 let mytree = Lf;;
 
-let addx t x =
-    let newtree = add t x in
-    t = newtree;;
+(* 要素をリストにして、それを順に木に追加する。
+    t -- tree, l -- list   *)
+let rec addx t l =
+    match l with
+      [] -> t
+    | v :: rest ->
+       addx (add t v) rest;;
 
+let test1 = addx mytree [3; 1; 2; 4] = Br (3, Br (1, Lf, Br (2, Lf, Lf)), Br (4, Lf, Lf));;
+let test2 = addx mytree [3; 2; 1; 4] = Br (3, Br (2, Br (1, Lf, Lf), Lf), Br (4, Lf, Lf));;
+let test3 = addx mytree [2; 1; 3; 4] = Br (2, Br (1, Lf, Lf), Br (3, Lf, Br (4, Lf, Lf)));;
+let test4 = addx mytree [2; 4; 3; 1] = Br (2, Br (1, Lf, Lf), Br (4, Br (3, Lf, Lf), Lf));;
