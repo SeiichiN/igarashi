@@ -32,4 +32,4 @@ let rec fibo x =
 let rec fib x =
   if x < 3 then Cons (1, fib)
   else
-    Cons (fibo(x-1)+fibo(x-2), fib);;
+    Cons (fibo(x-1) + fibo(x-2), fib);;
