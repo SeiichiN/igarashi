@@ -36,9 +36,14 @@ let rec depth = function
 let testtree = Br{v = 1; left = Lf; right = Lf};;
 
 (* 完全木 *)
-let comptree = Br{1; Br{2; Br{4; Lf; Lf};
-Br{5; Lf; Lf}}; Br{3: Br{6; Lf; Lf};
-Br{7; Lf; Lf}}};;
+let comptree = 
+    Br{v=1; 
+      left=Br{v=2; 
+            left=Br{v=4; left=Lf; right=Lf};
+            right=Br{v=5; left=Lf; right=Lf}}; 
+      right=Br{v=3;
+            left=Br{v=6; left=Lf; right=Lf};
+            right=Br{v=7; left=Lf; right=Lf}}};;
 
 
 (*
