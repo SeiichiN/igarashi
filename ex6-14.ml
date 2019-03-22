@@ -46,10 +46,10 @@ let is_prime1 x =
     in
     not (is_divisible_from_2_to 2);;
 
-(* 素数かどうかを調べる。割る数の最大は、悪数の平方根 *)
+(* 素数かどうかを調べる。割る数の最大は、調べる数の平方根 *)
 let is_prime2 x =
     let rec is_divisible_from_2_to n =
-        if n = int_of_float(floor(sqrt (float_of_int x))) then false
+        if n > int_of_float(floor(sqrt (float_of_int x))) then false
         else
             (n > 1) && ((x mod n = 0) || is_divisible_from_2_to (n+1))
     in
@@ -65,6 +65,31 @@ let rec next_prime x =
 (* 素数の無限列 *)
 let rec prime_seq x =
     if is_prime2 (x+1)
+    then Cons(x+1, prime_seq)
+    else prime_seq (x+1);;
+
+(* x 以下の素数のリストを得る *)
+let primes x =
+    let rec primes_in n e =
+        let s = nthseq n (prime_seq 1) in
+        if x <= s then e
+        else
+            primes_in (n+1) (s :: e)
+        in
+    primes_in 2 [];;
+
+let is_prime3 x =
+    let rec is_divisible = function
+        [] -> false
+        | v :: rest ->
+                if x mod v = 0 then true
+                else is_divisible rest
+    in
+    not (is_divisible (primes x));;
+
+(* 素数の無限列 *)
+let rec prime_seq x =
+    if is_prime3 (x+1)
     then Cons(x+1, prime_seq)
     else prime_seq (x+1);;
 
