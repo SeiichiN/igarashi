@@ -55,6 +55,11 @@ let is_prime2 x =
     in
     not (is_divisible_from_2_to 2);;
 
+(* 素数の無限列 *)
+let rec prime_seq x =
+    if is_prime2 (x+1)
+    then Cons(x+1, prime_seq)
+    else prime_seq (x+1);;
 
 
 (* 与えられた x より大きい最小の素数を返す関数 *)
@@ -62,35 +67,51 @@ let rec next_prime x =
     if is_prime (x+1) then x+1
     else next_prime (x+1);;
 
-(* 素数の無限列 *)
-let rec prime_seq x =
-    if is_prime2 (x+1)
-    then Cons(x+1, prime_seq)
-    else prime_seq (x+1);;
 
 (* x 以下の素数のリストを得る *)
 let primes x =
-    let rec primes_in n e =
-        let s = nthseq n (prime_seq 1) in
-        if x <= s then e
-        else
-            primes_in (n+1) (s :: e)
-        in
-    primes_in 2 [];;
-
+  let rec primes_in n e =
+    let next = next_prime n in
+    if x <= next then e
+    else
+      primes_in next (next :: e)
+  in
+  primes_in 1 [];;
+  
+  
+(* 素数かどうかの判定 *)
+(* l -- x 未満の素数のリスト *)
 let is_prime3 x =
-    let rec is_divisible = function
-        [] -> false
-        | v :: rest ->
-                if x mod v = 0 then true
-                else is_divisible rest
-    in
-    not (is_divisible (primes x));;
+  let rec is_divible x l =
+    match l with
+      [] -> false
+    | v :: rest ->
+     if x mod v = 0 then true   (* 割り切れる = 素数ではない *)
+     else is_divible x rest
+  in
+  not(is_divible x (primes (x-1)));;
 
 (* 素数の無限列 *)
-let rec prime_seq x =
-    if is_prime3 (x+1)
-    then Cons(x+1, prime_seq)
-    else prime_seq (x+1);;
+let rec prime_seq primes x =
+  let x' = x + 1 in
+  let rec is_prime n = function
+      [] -> true
+    | p :: rest ->
+       if p = n then true
+       else
+         p < n && n mod p <> 0 && is_prime n rest
+  in
+  if is_prime x' primes
+  then Cons (x', prime_seq (x' :: primes))
+  else prime_seq primes x';;
+  
+(* let prime = Cons (2, prime_seq [2]);; *) (* 下と同じ *)
+let prime = prime_seq [] 1;;  
 
-let test_nth_prime = nthseq 20 (prime_seq 1) = 71;;
+let rec is_prime n = function
+    [] -> true
+  | p :: rest ->
+     if p*p > n then true
+     else
+       p*p <= n && n mod p <> 0 && is_prime n rest;;
+  (* is_prime x' primes *)
