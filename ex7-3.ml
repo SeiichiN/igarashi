@@ -63,9 +63,10 @@ let rec change coins amount =
      else c :: change coins (total - c);;
  *)
 
-
+(*
 exception Failure of string;;
-  
+ *)
+
 let rec change coins amount =
     match (coins, amount) with
       (_, 0) -> []
