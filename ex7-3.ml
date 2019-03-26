@@ -83,7 +83,8 @@ let rec change coins amount =
             (try
                 c :: change coins (total - c)
              with Failure "change" -> [] )
-    | _ -> [] ;;
+    | _ -> [] 
+;;
   
 let test11 = change [5; 2] 16 = [5; 5; 2; 2; 2];;
 
@@ -102,16 +103,7 @@ let us_coins = [25; 10; 5; 1] (* アメリカのコイン *)
 and gb_coins = [50; 20; 10; 5; 2; 1] (* イギリスのコイン *) ;;
 
 let my_coins = [5; 2];;
-<<<<<<< HEAD
 
 change gb_coins 43;; 
+change us_coins 43;;
 change my_coins 43;;
-
-=======
-  
-change gb_coins 43;; 
-  change us_coins 43;;
-    change my_coins 43;;
-      
-    
->>>>>>> 0ccc3d071ac659021778b5f336dc192bac0cfc2c
