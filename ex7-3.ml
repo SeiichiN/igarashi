@@ -93,4 +93,8 @@ let rec change coins amount =
 let us_coins = [25; 10; 5; 1] (* アメリカのコイン *)
 and gb_coins = [50; 20; 10; 5; 2; 1] (* イギリスのコイン *) ;;
 
+let my_coins = [5; 2];;
+
 change gb_coins 43;; 
+change my_coins 43;;
+
