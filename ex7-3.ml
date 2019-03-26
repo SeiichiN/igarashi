@@ -54,25 +54,17 @@ let rec change coins amount =
 - : int list = [5; 5; 2; 2; 2]
 
  *)
-
+(*
 let rec change coins amount =
   match (coins, amount) with
     (_, 0) -> []
   | ((c :: rest) as coins, total) ->
      if c > total then change rest total
      else c :: change coins (total - c);;
-
-let us_coins = [25; 10; 5; 1] (* アメリカのコイン *)
-and gb_coins = [50; 20; 10; 5; 2; 1] (* イギリスのコイン *) ;;
-
-let test1 = change gb_coins 43 = [20; 20; 2; 1];;
-let test2 = change us_coins 43 = [25; 10; 5; 1; 1; 1];;
-
-(*
-  Exception Failure "chage";;
  *)
 
 
+exception Failure of string;;
   
 let rec change coins amount =
     match (coins, amount) with
@@ -82,10 +74,16 @@ let rec change coins amount =
         else
             (try
                 c :: change coins (total - c)
-             with Failure "change" -> [] )
-    | _ -> [] 
+              with Failure "change" -> change rest total )
+    | _ -> raise (Failure "change")
 ;;
-  
+
+let us_coins = [25; 10; 5; 1] (* アメリカのコイン *)
+and gb_coins = [50; 20; 10; 5; 2; 1] (* イギリスのコイン *) ;;
+
+let test1 = change gb_coins 43 = [20; 20; 2; 1];;
+let test2 = change us_coins 43 = [25; 10; 5; 1; 1; 1];;
+
 let test11 = change [5; 2] 16 = [5; 5; 2; 2; 2];;
 
   (*
@@ -104,6 +102,8 @@ and gb_coins = [50; 20; 10; 5; 2; 1] (* イギリスのコイン *) ;;
 
 let my_coins = [5; 2];;
 
-change gb_coins 43;; 
-change us_coins 43;;
-change my_coins 43;;
+let test21 = change gb_coins 43 = [20; 20; 2; 1];; 
+let test22 = change us_coins 43 = [25; 10; 5; 1; 1; 1];;
+let test23 = change my_coins 43 = [5; 5; 5; 5; 5; 5; 5; 2; 2; 2; 2];;
+let test24 = change [5; 2] 16 = [5; 5; 2; 2; 2];;
+  
