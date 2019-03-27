@@ -22,3 +22,8 @@ let reciprocals = mapseq (fun x -> 1.0 /. float_of_int x) (from 2);;
                      
  *)
   
+let rec take n (Cons(x, from)) =
+  if n = 1 then x
+  else take (n-1) (from x);;
+
+  
