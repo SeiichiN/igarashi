@@ -21,9 +21,22 @@ let reciprocals = mapseq (fun x -> 1.0 /. float_of_int x) (from 2);;
   - : float list = [0.5; 0.333333333333315; 0.25; 0.2; 0.166666666666657]
                      
  *)
-  
-let rec take n (Cons(x, from)) =
+ 
+(*
+ * n 番目の x を取得する関数
+ *)
+let rec nthseq n (Cons(x, f)) =
   if n = 1 then x
-  else take (n-1) (from x);;
+  else nthseq (n-1) (f ()) ;;
+
+(*
+ * 無限列のはじめの n 要素をリストにする
+ *)
+let take n (Cons(x, f)) =
+  let rec take_in n (Cons(x, f)) e =
+    if n = 1 then e @ [x]
+    else take_in (n-1) (f ()) (e @ [x] )
+  in
+  take_in n (f ()) [];;
 
   
