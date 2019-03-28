@@ -39,4 +39,8 @@ let take n (Cons(x, f)) =
   in
   take_in n (Cons(x, f)) [];;
 
-  
+(*  
+let s = "life";;
+s.[2] <- 'k';;
+s;;
+*)
