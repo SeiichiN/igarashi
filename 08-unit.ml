@@ -29,6 +29,8 @@ let rec nthseq n (Cons(x, f)) =
   if n = 1 then x
   else nthseq (n-1) (f ()) ;;
 
+let test_nthseq = nthseq 5 (from 1) = 5;;
+
 (*
  * 無限列のはじめの n 要素をリストにする
  *)
@@ -39,8 +41,24 @@ let take n (Cons(x, f)) =
   in
   take_in n (Cons(x, f)) [];;
 
-(*  
+let test_take = take 5 reciprocals =
+    [0.5; 0.333333333333333315; 0.25; 0.2; 0.166666666666666657];;
+
+
+
 let s = "life";;
 s.[2] <- 'k';;
 s;;
-*)
+
+let pair = ("life", 2);;
+(fst pair).[2] <- 'k';;
+pair;;
+
+let pair = ("life", "life");;
+  (fst pair).[2] <- 'k';;
+    pair;;
+
+    let pair = let p = "life" in (p, p);;
+      (fst pair).[2] <- 'k';;
+        pair;;
+          
