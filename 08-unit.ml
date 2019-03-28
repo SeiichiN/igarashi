@@ -37,6 +37,6 @@ let take n (Cons(x, f)) =
     if n = 1 then e @ [x]
     else take_in (n-1) (f ()) (e @ [x] )
   in
-  take_in n (f ()) [];;
+  take_in n (Cons(x, f)) [];;
 
   
