@@ -36,3 +36,23 @@ type teacher = {name : string; mutable office : string};;
 
 let t = {name = "Igarashi"; office = "140"};;
 
+t.office <- "142";;
+t;;
+
+(* ref -- 参照 （5という値が格納されているメモリへの参照） *)
+let p = ref 5 and q = ref 2;;
+(* ! -- 参照先から格納された値をとりだす *)
+(!p, !q);;
+(* := -- 参照先の値の書き換え *)
+p := !p + !q;;
+
+let reflist = [p; q; p];;
+p := 100;;
+reflist;;
+
+(* 参照の参照 *)
+let p = ref 5 and q = ref 2;;
+let refp = ref p and refq = ref q;;
+!refq := !(!refp);;
+(!p, !q);;
+
