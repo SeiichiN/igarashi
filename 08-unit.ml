@@ -46,19 +46,3 @@ let test_take = take 5 reciprocals =
 
 
 
-let s = "life";;
-s.[2] <- 'k';;
-s;;
-
-let pair = ("life", 2);;
-(fst pair).[2] <- 'k';;
-pair;;
-
-let pair = ("life", "life");;
-  (fst pair).[2] <- 'k';;
-    pair;;
-
-    let pair = let p = "life" in (p, p);;
-      (fst pair).[2] <- 'k';;
-        pair;;
-          
