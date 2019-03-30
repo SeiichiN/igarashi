@@ -56,3 +56,23 @@ let refp = ref p and refq = ref q;;
 !refq := !(!refp);;
 (!p, !q);;
 
+(* 配列 *)
+let ar = [| 1; 2 |];;
+let [| b; c |] = ar;;
+
+(* 多相性 *)
+let x = ref [];;
+let y = ref [];;
+(true :: !y);; (* <= この時点で、bool list となる *)
+(2 :: !x);;    (* <= この時点で、int list となる *)
+x := [1];;
+x;;
+
+let (get, set) =
+    let r = ref [] in
+    ((fun () -> !r), (fun x -> r := x));;
+
+(* 1 :: get ();; *)
+"abc" :: get ();;
+set ["abc"];;
+1 :: get () ;;
