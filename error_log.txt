@@ -1,0 +1,57 @@
+utop # q;;
+- : int queue =
+{head =
+  MCons (1,
+   {contents =
+     MCons (2, {contents = MCons (3, {contents = MNil})})});
+ tail = MCons (3, {contents = MNil})}
+
+utop # take q;;
+- : int = 1
+
+utop # q;;
+- : int queue =
+{head = MCons (2, {contents = MCons (3, {contents = MNil})});
+ {tail = MCons (3, {contents = MNil})}
+
+utop # take q;;
+- : int = 2
+
+utop # q;;
+- : int queue =
+{head = MCons(3, {contents = MNil});
+ tail = MCons(3, {contents = MNil})}
+
+utop # add 4 q;;
+- : int queue =
+{head = MCons (3, {contents = MCons (4, {contents = MNil})});
+ tail = MCons (4, {contents = MNil})}
+
+utop # take q; q;;
+- : int queue =
+{head = MCons(4, {contents = MNil});
+ tail = MCons(4, {contents = MNil})}
+
+utop # ignore(take q);;
+- : unit = ()
+
+utop # q;;
+- : queue =
+{head = MNil; tail = MCons (4, {contents = MNil})}
+
+utop # add 5 q;;
+- : unit = ()
+
+utop # q;;
+- : int queue =
+{head = MNil; tail = MCons (5, {contents = MNil})}
+
+
+
+utop # ignore(take q); add 5 q; peek q;;
+Exception: Failure "hd: queue is broken".
+utop # q;;
+- : int queue =
+{head = MNil; tail = MCons (5, {contents = MNil})}
+
+

@@ -35,6 +35,9 @@ let peek = function
 (* take -- 先頭要素を削除して、その先頭要素を返す関数 *)
 let take = function
     {head = MNil; tail = MNil} ->failwith "dequeue: queue is empty"
-  | {head = MCons(a, next)} as q -> q.head <- !next; a
+  | {head = MCons(a, next)} as q ->
+          q.head <- !next;
+          if a.head = MNil then a.tail <- MNil else ();
+          a
   | _ -> failwith "dequeue: queue is broken";;
 
