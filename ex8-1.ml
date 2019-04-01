@@ -8,7 +8,7 @@ type 'a ref = { mutable contents : 'a };;
 
 type 'a ref = {mutable contents : 'a};;
 
+
 let ref x = { contents = x };;
 
-let p = ref 5;;
-
+let (!) x = x.contents;;
