@@ -10,6 +10,7 @@ let create () = {head = MNil; tail = MNil};;
 
 (* 実行例 *)
 let q : int queue = create ();;
+q;;
 
 (* add -- 要素を加えるための関数 *)
 let add a = function
@@ -36,8 +37,16 @@ let peek = function
 let take = function
     {head = MNil; tail = MNil} ->failwith "dequeue: queue is empty"
   | {head = MCons(a, next)} as q ->
-          q.head <- !next;
-          if a.head = MNil then a.tail <- MNil else ();
-          a
+     if !next == MNil
+     then (q.head <- !next; q.tail <- !next)
+     else (q.head <- !next);
+     a
   | _ -> failwith "dequeue: queue is broken";;
+
+(*
+let take = function
+    {head = MNil; tail = MNil} ->failwith "dequeue: queue is empty"
+  | {head = MCons(a, next)} as q -> q.head <- !next; a
+  | _ -> failwith "dequeue: queue is broken";;
+*)
 
