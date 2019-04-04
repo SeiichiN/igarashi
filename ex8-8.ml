@@ -1,0 +1,50 @@
+(* 練習問題 8.8 *)
+
+(*
+関数 array_iter を改造して、関数 array_iteri を定義しなさい。この関数は、各要素に関する動作として、要素そのものだけでなく、その要素が何番目の要素なのかを表す整数も引数とします。つまり、
+   
+   array_iteri f [a1; a2; ...; an]
+
+は
+
+   begin f 1 a1; f 2 a2; ... ; f n an end
+
+となります。型と実行例は以下の通りです。
+
+   # array_iteri;;
+   -: (int -> 'a -> 'b) -> 'a array -> unit = <fun>
+
+   # array_iteri (fun i s -> print_string "Stasion #"; print_int i;
+                            print_string ": "; print_endline s)
+       [| "Tokyo"; "Shinagawa"; "Shin-Yokohama"; "Nagoya"; "Kyoto"; "Shin-Osaka" |];;
+
+   Station #1: Tokyo
+   Station #2: Shinagawa
+   Station #3: Shin-Yokohama
+   Station #4: Nagoya
+   Station #5: Kyoto
+   Station #6: Shin-Osaka
+   - : unit = ()
+ *)
+
+let array_iteri f arr =
+  let i = ref 0 and j = Array.length arr in
+  while (!i < j) do
+      f (!i+ 1)  arr.(!i);
+      i := !i + 1
+  done
+;;
+
+array_iteri (fun i s -> print_string "Stasion #"; print_int i;
+              print_string ": "; print_endline s)
+  [| "Tokyo"; "Shinagawa"; "Shin-Yokohama"; "Nagoya"; "Kyoto"; "Shin-Osaka" |];;
+
+(* 実行例 
+Stasion #1: Tokyo
+Stasion #2: Shinagawa
+Stasion #3: Shin-Yokohama
+Stasion #4: Nagoya
+Stasion #5: Kyoto
+Stasion #6: Shin-Osaka
+- : unit = ()
+*)

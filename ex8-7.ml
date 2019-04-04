@@ -40,8 +40,38 @@ iter (fun s -> print_string "Station: "; print_endline s)
 let ar = [| 1; 2 |];;
 let [| b; c |] = ar;;
 
-let rec array_iter f arr =
-    let i = ref 1 in
-    begin
-        f arr.(!i);
+(* 解答： length 関数を使った場合 *)
+let array_iter f arr =
+  let i = ref 0 and j = Array.length arr in
+  while (!i < j) do
+      f arr.(!i);
+      i := !i + 1
+  done
+;;
+
+exception Invalid_argument of string;;
+
+(* 解答： 例外処理を使った場合 *)
+let array_iter f arr =
+  let i = ref 0 and j = ref true in
+  while (!j = true) do
+    try
+      f arr.(!i);
+      i := !i + 1
+   with
+     Invalid_argument "index out of bounds" -> j := false;
+  done
+;;
+(* 以下のような警告が出る
+Warning 52: Code should not depend on the actual values of
+  this constructor's arguments. They are only for information
+and may change in future versions. (See manual section 8.5)
+
+これは、事前に以下の文を記述しておくと、回避できるみたい。
+
+exception Invalid_argument of string;;
+*)
+
+array_iter (fun s -> print_string "Station: "; print_endline s)
+[|"Tokyo"; "Shinagawa"; "Shin-Yokohama"; "Nagoya"; "Kyoto"; "Shin-Osaka"|];;
 
