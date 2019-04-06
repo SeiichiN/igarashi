@@ -33,50 +33,35 @@
 
  *)
 
+(* Num ライブラリを使う *)
+#load "nums.cma";;
+open Num;;
+
+let keta = 10;;  (* 小数点の桁数 *)
+
 (* Newton-Raphson 法のプログラム *)
-
-(*
-x * x - 2 = 0  となるような関数 f(x) = x*x - 2 について考える。
-x(n+1) = x(n) - f(x(n)) / f'(x(n))
-       = x(n) - (x(n) * x(n) - 2) / 2 * x(n)
-
-       n=1 のときの x(1) の値を、仮に 5 とすると、
-
-       x(2) = x(1) - (x(1) * x(1) - 2) / 2 * x(1)
-            = 5    - ( 5   *  5   - 2) / 2 * 5
-            = 5    -       23          / 10
-            = 5    -       2.3
-            = 2.7
-
-        x(3) = x(2) - (x(2) * x(2) - 2) / 2 * x(2)
-             = 2.7  - (2.7  * 2.7  - 2) / 2 * 2.7
-             = 2.7  - (7.29        - 2) / 5.4
-             = 2.7  -  5.29             / 5.4
-             = 2.7  -  0.97962963
-             = 1.72037037
-*)
 
 (* f(x) の x のときの微分係数を求める
  * dx を 0.1 * 10 のマイナス10乗 として考える
  *)
 let deriv f =
-    let dx = 0.1e-10 in
-    fun x -> (f(x +. dx) -. f(x)) /. dx;;
+    let dx = Int 1 // Int 10000000000 in
+    fun x -> (f(x +/ dx) -/ f(x)) // dx;;
 
-deriv (fun x -> x *. x) 1.0;;
-(* - : float = 2.000000165480742 *)
+approx_num_fix keta (deriv (fun x -> x **/ Int 2) (Int 1));;
+(* - : string = "+2.00000" *)
 
 (* f(x) = 0 となるような関数 f について
  * x が s のときの値を求める。
  * すなわち、x1 が s のときの x2 をもとめる。 *)
 let nr f s =
-    s -. (f s) /. (deriv f s);;
+    s -/ (f s) // (deriv f s);;
 
 (* 実行例
  * f(x) = x * x として
  * x1 が 1.0 のときの x2 の値は *)
-nr (fun x -> x *. x) 1.0;;
-(* - : float = 0.500000041370182058 *)
+approx_num_fix keta (nr (fun x -> x **/ Int 2) (Int 1));;
+(* - : string = "+0.50000" *)
 
 (* f(x) = 0 となる x をもとめる
  * f -- f(x) = 0 となる f(x)
@@ -86,20 +71,21 @@ nr (fun x -> x *. x) 1.0;;
  *      0.1e-6 まで求めることとする。 
  * x2 - x1 の値が、dx より小さくなったら解とする。 *)
 let rec newton f s =
-    let dx = 0.1e-6 in
+    let dx = Int 1 // Int 10000000000 in
     let x1 = nr f s in
     let x2 = nr f x1 in
-    if abs_float(x2 -. x1) > dx
+    if abs_num(x2 -/ x1) >/ dx
     then newton f x1
     else x1;;
 
 (* ルート5 を求める *)
-newton (fun x -> x *. x -. 5.0) 1.0;;
-(* - : float = 2.23606797750364272 *)
+approx_num_fix keta (newton (fun x -> x **/ Int 2  -/ Int 5) (Int 1));;
+(* - : string = "+2.2360679775" *)
 
 (* heihokon -- 平方根を求める
- * n -- 実数で *)
+ * n -- 整数 *)
 let heihokon n = 
-        newton (fun x -> x *. x -. n) 1.0;;
+        approx_num_fix keta (newton (fun x -> x **/ Int 2 -/ (Int n)) (Int 1));;
 
-
+heihokon 2;;
+(* - : string = "+1.4142135624" *)
