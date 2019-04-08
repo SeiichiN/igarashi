@@ -8,12 +8,13 @@ UNIX の fold コマンドは、ファイル名の列を引数として、その
 
 let ver = "0.1";;
 
-let display_linenum = ref false;; (* 行番号を表示するかどうかを示す *)
+let display_linenum = ref false (* 行番号を表示するかどうかを示す *)
+and line_width = ref 80;;
 
 let filenames = ref [];;  (* 処理するファイル名をためておく *)
 
 let spec = [("-n", Arg.Set display_linenum, "Display line number");
-            ("--width", Arg.Set line_width, "Display line width");
+            ("--width", Arg.Int width, "Display line width");
             ("-version",
             Arg.Unit
             (fun () -> Printf.printf "cat in OCaml ver: %s\n" ver),
@@ -24,16 +25,14 @@ let display_file filename =
   let oc = open_in filename
   and line = ref 1
   and chars = ref "a"
+  and col = ref 0
   and end_of_file = ref false in
   while (!end_of_file == false) do
       try
           chars := input_char oc;
-          if !display_linenum
-          then
-            Printf.printf "%4d " !line
-          else ();
-          print_endline !s;
-          line := !line + 1
+          col := col + 1;
+          print_char chars;
+          if !col = !line_width then print_newline ();
       with End_of_file -> end_of_file := true
   done;
   close_in oc
@@ -43,6 +42,7 @@ let _ =
     Arg.parse spec
     (fun s -> filenames := s :: !filenames)
     "Usage: cat [-n] [-help] [-version] filename ...";
+    if width > 0 then line_width := width;
 
     (* この時点で display_linenum, filenames が変更されているはず *)
     List.iter (fun s -> display_file s)
