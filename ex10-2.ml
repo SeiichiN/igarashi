@@ -1,4 +1,4 @@
-(* プログラミング in OCaml 練習問題 10.2 *)
+﻿(* プログラミング in OCaml 練習問題 10.2 *)
 
 (* 練習問題 10.1 *)
 
@@ -33,14 +33,14 @@ let display_count filename =
   and bytes = ref 0
   and words = ref 0
   and moji = ref 'a'
-  and end_of_file = ref true in
-  while (!end_of_file == true) do
+  and end_of_file = ref false in
+  while (!end_of_file == false) do
       try
         moji := input_char oc;
         bytes := !bytes + 1;
         if !moji = ' ' then words := !words + 1;
         if !moji = '\n' then lines := !lines + 1
-      with End_of_file -> end_of_file := false
+      with End_of_file -> end_of_file := true
   done;
 close_in oc;
 [("bytes", string_of_int !bytes);
