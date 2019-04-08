@@ -11,12 +11,12 @@ let ver = "0.1";;
 let display_linenum = ref false (* 行番号を表示するかどうかを示す *)
 and line_width = ref 80;;
 
-let f_int n = line_width := n;;
-
 let filenames = ref [];;  (* 処理するファイル名をためておく *)
 
 let spec = [("-n", Arg.Set display_linenum, "Display line number");
-            ("--width", Arg.Int f_int, "Display line width");
+            ("--width",
+            Arg.Int (fun n -> line_width := n),
+            "Display line width");
             ("-version",
             Arg.Unit
             (fun () -> Printf.printf "cat in OCaml ver: %s\n" ver),
@@ -31,10 +31,10 @@ let display_file filename =
   and end_of_file = ref false in
   while (!end_of_file == false) do
       try
-          chars := input_char oc;
           col := !col + 1;
+          chars := input_char oc;
           print_char !chars;
-          if !col = !line_width then print_char '\n';
+          if !col mod !line_width = 0 then print_char '\n';
       with End_of_file -> end_of_file := true
   done;
   close_in oc
