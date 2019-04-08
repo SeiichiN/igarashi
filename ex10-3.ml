@@ -13,6 +13,7 @@ let display_linenum = ref false;; (* 行番号を表示するかどうかを示�
 let filenames = ref [];;  (* 処理するファイル名をためておく *)
 
 let spec = [("-n", Arg.Set display_linenum, "Display line number");
+            ("--width", Arg.Set line_width, "Display line width");
             ("-version",
             Arg.Unit
             (fun () -> Printf.printf "cat in OCaml ver: %s\n" ver),
@@ -22,18 +23,18 @@ let spec = [("-n", Arg.Set display_linenum, "Display line number");
 let display_file filename =
   let oc = open_in filename
   and line = ref 1
-  and s = ref "a"
-  and end_of_file = ref true in
-  while (!end_of_file == true) do
+  and chars = ref "a"
+  and end_of_file = ref false in
+  while (!end_of_file == false) do
       try
-          s := input_line oc;
+          chars := input_char oc;
           if !display_linenum
           then
             Printf.printf "%4d " !line
           else ();
           print_endline !s;
           line := !line + 1
-      with End_of_file -> end_of_file := false
+      with End_of_file -> end_of_file := true
   done;
   close_in oc
 
