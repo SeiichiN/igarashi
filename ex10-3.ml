@@ -11,10 +11,12 @@ let ver = "0.1";;
 let display_linenum = ref false (* 行番号を表示するかどうかを示す *)
 and line_width = ref 80;;
 
+let f_int n = line_width := n;;
+
 let filenames = ref [];;  (* 処理するファイル名をためておく *)
 
 let spec = [("-n", Arg.Set display_linenum, "Display line number");
-            ("--width", Arg.Int width, "Display line width");
+            ("--width", Arg.Int f_int, "Display line width");
             ("-version",
             Arg.Unit
             (fun () -> Printf.printf "cat in OCaml ver: %s\n" ver),
@@ -23,16 +25,16 @@ let spec = [("-n", Arg.Set display_linenum, "Display line number");
 
 let display_file filename =
   let oc = open_in filename
-  and line = ref 1
-  and chars = ref "a"
+  (* and line = ref 1 *)
+  and chars = ref 'a'
   and col = ref 0
   and end_of_file = ref false in
   while (!end_of_file == false) do
       try
           chars := input_char oc;
-          col := col + 1;
-          print_char chars;
-          if !col = !line_width then print_newline ();
+          col := !col + 1;
+          print_char !chars;
+          if !col = !line_width then print_char '\n';
       with End_of_file -> end_of_file := true
   done;
   close_in oc
@@ -42,8 +44,7 @@ let _ =
     Arg.parse spec
     (fun s -> filenames := s :: !filenames)
     "Usage: cat [-n] [-help] [-version] filename ...";
-    if width > 0 then line_width := width;
-
+    Printf.printf "line_width: %d" !line_width; print_newline();
     (* この時点で display_linenum, filenames が変更されているはず *)
     List.iter (fun s -> display_file s)
     (List.rev !filenames);;
