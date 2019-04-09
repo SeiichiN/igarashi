@@ -34,7 +34,8 @@ let display_file filename =
           col := !col + 1;
           chars := input_char oc;
           print_char !chars;
-          if !col mod !line_width = 0 then print_char '\n';
+          if !chars = '\n' then col := 0; 
+          if (!col <> 0 && !col mod !line_width = 0) then print_char '\n';
       with End_of_file -> end_of_file := true
   done;
   close_in oc
