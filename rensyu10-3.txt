@@ -1,0 +1,72 @@
+プログラミング in OCaml 練習問題 10.3
+
+練習問題 10.3 foldコマンドを実装する
+
+UNIX の fold コマンドは、ファイル名の列を引数として、その内容を、長い行を複数の短い行（デフォルトでは 80 文字）に分割しながら表示します。これを OCaml で実装し、実行可能ファイルを作成しなさい。オプションとしては、行の長さを整数で指定する --width を実装しなさい。
+
+解答
+
+let ver = "0.1";;
+
+let display_linenum = ref false (* 行番号を表示するかどうかを示す *)
+and line_width = ref 80;;
+
+let filenames = ref [];;  (* 処理するファイル名をためておく *)
+
+let spec = [("-n", Arg.Set display_linenum, "Display line number");
+            ("--width",
+            Arg.Int (fun n -> line_width := n),
+            "Display line width");
+            ("-version",
+            Arg.Unit
+            (fun () -> Printf.printf "cat in OCaml ver: %s\n" ver),
+            "Display version number")];;
+
+
+let display_file filename =
+  let oc = open_in filename
+  and chars = ref 'a'
+  and col = ref 0
+  and end_of_file = ref false in
+  while (!end_of_file == false) do
+      try
+          col := !col + 1;
+          chars := input_char oc;
+          print_char !chars;
+          if !chars = '\n' then col := 0; 
+          if (!col <> 0 && !col mod !line_width = 0) then print_char '\n';
+      with End_of_file -> end_of_file := true
+  done;
+  close_in oc
+
+
+let _ =
+    Arg.parse spec
+    (fun s -> filenames := s :: !filenames)
+    "Usage: cat [-n] [-help] [-version] filename ...";
+    Printf.printf "line_width: %d" !line_width; print_newline();
+    (* この時点で display_linenum, filenames が変更されているはず *)
+    List.iter (fun s -> display_file s)
+    (List.rev !filenames);;
+
+考えたところ
+
+オプションの処理
+
+spec は、オプションについてのリストである。
+
+その中で、--width というオプションについては、以下のリスト要素で処理をおこなう。
+
+("--width", Arg.Int (fun n -> line_width : = n), "Display line width");
+
+Arg.Int であるが、この関数は、引数として、オプションの整数と、その整数を処理するための関数を受け取る。
+
+この引数としてセットする関数のタイプは、int -> unit なので、返り値はいらない。
+今回は、受け取った整数を line_width に代入している。
+
+今後の課題
+
+UNIX版の fold もそうなのだが、日本語の文字を受け取ったときの処理を考えなくてはならない。文字と文字の境界でうまく切れればいいのだが、そうでない場合、文字が消えるか、文字化けする。
+（参考）
+[lisp]UTF8の文字境界を判定
+http://d.hatena.ne.jp/nagayoru/20090121/1232547390
