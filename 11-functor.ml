@@ -385,3 +385,78 @@ module MakeAbstractSet :
          val elements : t -> elt list
        end
 *)
+
+module Pair =
+  struct
+    module Elt =
+      struct
+        type t = int
+        let compare i j = i - j
+      end
+    module Set = MakeAbstractSet (Elt)
+  end;;
+(*
+module Pair :
+  sig
+    module Elt : sig type t = int val compare : int -> int -> int end
+    module Set :
+      sig
+        type elt = Elt.t
+        type t = MakeAbstractSet(Elt).t
+        val empty : t
+        val mem : elt -> t -> bool
+        val add : elt -> t -> t
+        val inter : t -> t -> t
+        val elements : t -> elt list
+      end
+  end
+*)
+
+module type NaiveSig =
+  sig
+    module Elt : OrderedType
+    module Set : SET
+  end;;
+
+module type Psig =
+  sig
+    module Elt : OrderedType
+    module Set : SET with type elt = Elt.t
+  end;;
+  
+module MakeTest (P : Psig) =
+  struct
+    let test_elements set =
+      let rec loop = function
+          [] | [_] -> true
+          | x:: y::rest ->
+             if P.Elt.compare x y > 0 then false
+             else loop (y::rest)
+      in
+      loop (P.Set.elements set)
+  end;;
+(*
+module type Psig =
+  sig
+    module Elt : OrderedType
+    module Set :
+      sig
+        type elt = Elt.t
+        type t
+        val empty : t
+        val mem : elt -> t -> bool
+        val add : elt -> t -> t
+        val inter : t -> t -> t
+        val elements : t -> elt list
+      end
+  end
+module MakeTest :
+  functor (P : Psig) -> sig val test_elements : P.Set.t -> bool end
+ *)
+
+module Test = MakeTest (Pair);;
+  (* module Test : sig val test_elements : Pair.Set.t -> bool end *)
+  
+Test.test_elements (Pair.Set.add 1 (Pair.Set.add 2 Pair.Set.empty));;
+  (* - : bool = true *)
+  
