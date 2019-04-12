@@ -5,9 +5,9 @@ module type OrderedType =
         val compare : t -> t -> int
     end;;
 
-module type IntSetType =
+module type SET =
     sig
-        type elt = Order.t
+        type elt
         type t
         val empty : t
         val mem : elt -> t -> bool
@@ -15,9 +15,15 @@ module type IntSetType =
         val inter : t -> t -> t
         val elements : t -> elt list
     end;;
-
-module MakeSet (Order : OrderedType) :
-    IntSetType =
+  
+  
+  (*
+MakeSet -- ファンクター
+@param -- Order（仮引数） 引数としてモジュールをとる
+          そのモジュールは、OrderedType というシグネチャ型が適用される
+with -- シグネチャにパッチをあてて、型定義を補う 
+   *)
+module MakeSet (Order : OrderedType) : SET with type elt = Order.t =
     struct
         type elt = Order.t
         type t = elt list
@@ -73,5 +79,10 @@ module MyIntSetModule =
         let compare i j = i - j
     end;;
 
-module MyIntSet = MakeSet(MyIntSetModule);;
+module MyIntSet = MakeSet(
+    struct
+        type t = int
+        let compare i j = i - j
+    end
+    );;
 

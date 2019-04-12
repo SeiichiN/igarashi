@@ -4,7 +4,6 @@
 
 (*
 下の
-
 module OrderedInt' : OrderedType =
   struct
     type t = int
@@ -98,8 +97,10 @@ module OrderedInt' : OrderedType  =
     let compare i j = i - j
   end;;
 
+
 module IntSet' = MakeSet (OrderedInt');;
 
+  
 (*
 module OrderedInt' : OrderedType
 module IntSet' :
@@ -114,3 +115,4 @@ module IntSet' :
   end
  *)
                         
+  
