@@ -1,0 +1,80 @@
+ファンクターを自作する
+
+作成するファンクターの仕様
+
+名前： MakeSet
+機能： empty, mem, add, inter, elements
+compare: 小さい順 
+
+ファンクターの引数となるモジュールには、明示的にその型を指定する必要がある。
+（その型 = シグネチャ）
+
+今回は、以下のように指定する。
+
+# module type OrderedType =
+  sig
+    type t
+	val compare : t -> t -> int
+  end;;
+
+(* module type OrderedType = sig type t val compare : t -> t -> int end *)
+
+
+ファンクターの定義
+    
+# module MakeSet (Order : OrderedType) =
+    struct
+        type elt = Order.t
+        type t = elt list
+
+        let empty = []
+
+        let rec mem elt = function
+            [] -> false
+            | x :: rest ->
+                    let r = Order.compare elt x in
+                    (r = 0) || ((r > 0) && mem elt rest)
+
+        let rec add elt = function
+            [] -> [elt]
+            | (x :: rest as s) ->
+                    match Order.compare elt x with
+                    0 -> s
+            | r when r < 0 -> elt :: s
+            | _ -> x :: (add elt rest)
+
+        let rec inter s1 s2 =
+            match (s1, s2) with
+            (s1, []) -> []
+            | ([], s2) -> []
+            | ((e1 :: rest1 as s1), (e2 :: rest2 as s2)) ->
+                    match Order.compare e1 e2 with
+                    0 -> e1 :: inter rest1 rest2
+            | r when r < 0 -> inter rest1 s2
+            | _ -> inter s1 rest2
+
+        let rec elements s = s
+    end;;
+
+(*
+module MakeSet :
+  functor (Order : OrderedType) ->
+    sig
+      type elt = Order.t
+      type t = elt list
+      val empty : 'a list
+      val mem : elt -> elt list -> bool
+      val add : elt -> elt list -> elt list
+      val inter : elt list -> elt list -> elt list
+      val elements : 'a -> 'a
+   end
+*)
+
+module ファンクター名 ( 引数名 : シグネチャー式 ) = モジュール式
+
+module ファンクター名 = functor ( 引数名 : シグネチャー式 ) -> モジュール式
+
+コンパイラの応答の特徴
+sig 内の type elt のところに Order.t と、引数であるモジュールの名前が現れている。
+「これは、ファンクターが適用されたときに生成されるモジュールのシグネチャが、引数として与えられるストラクチャそのものに依存することを表しています。」
+

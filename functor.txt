@@ -54,7 +54,10 @@ module IntSet :
     type t = Set.Make(OrgInt).t
     ...
 
-作成したモジュール IntSet を使って、以下の式を評価しても、コンパイラからの応答は同じである。
+こちらの場合は、ファンクターの名前、もとのモジュールの名前が現れる。
+
+
+ただ、作成したモジュール IntSet を使って、以下の式を評価した場合、方法1、方法2のどちらでも、コンパイラからの応答は同じである。
 
 let my = IntSet.add 2 (IntSet.add 1 IntSet.empty);;
 (* val my : IntSet.t = <abstr> *)
