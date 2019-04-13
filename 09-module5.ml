@@ -42,3 +42,6 @@ module type TABLE2 =
 module AbsTable : TABLE2 = Table;;
 
 
+let atable = AbsTable.add "a" "the first letter of the English alphabet" AbsTable.empty;;
+  (* val atable : (string, string) AbsTable.t = <abstr>   *)
+  

@@ -2,8 +2,9 @@
 
 module TableAL = (* AL = association list *)
     struct
-        type ('a, 'b)t = ('a * 'b) list
-
+        type ('a, 'b)t = ('a * 'b) list    (* <== この行がなくてもモジュール定義できる *)
+        (* しかし、TABLE2 のシグネチャを使うと、t がないといわれるので、これを記述する。 *)
+                                   
         let empty = []
 
         let add key datum table = (key, datum) :: table
@@ -25,7 +26,7 @@ module TableAL = (* AL = association list *)
                 
 module type TABLE2 =
     sig
-        type ('a, 'b) t (* = Empty | Entry of 'a * 'b * ('a, 'b) t *)
+        type ('a, 'b) t 
 
         val empty : ('a, 'b) t
 
@@ -35,6 +36,7 @@ module type TABLE2 =
 
         val dump : ('a, 'b) t -> ('a * 'b) list
     end;;
+
 
 module AbsTableAL : TABLE2 = TableAL;;
 
