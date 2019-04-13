@@ -19,18 +19,18 @@ module type OrderedType =
   sig
     type t
     val compare : t -> t -> int
-  end;;
-
-module MakeSet (Order : OrderedType) :
-  sig
-    type elt = Order.t
-    type t
-    val empty : t
-    val mem : elt -> t -> bool
-    val add : elt -> t -> t
-    val inter : t -> t -> t
-    val elements : t -> elt list
   end
+
+module MakeSet (Order : OrderedType) : 
+    sig
+      type elt = Order.t
+      type t
+      val empty : t
+      val mem : elt -> t -> bool
+      val add : elt -> t -> t
+      val inter : t -> t -> t
+      val elements : t -> elt list
+    end
 =
   struct
     type elt = Order.t
@@ -65,54 +65,73 @@ module MakeSet (Order : OrderedType) :
         | _ -> inter s1 rest2
 
     let rec elements s = s
-  end;;
+  end
 
+(* 比較のために、シグネチャのないモジュールを用意した *)
 module OrderedInt  =
   struct
     type t = int
     let compare i j = i - j
-  end;;
-
+  end
+(*
+module OrderedInt : sig type t = int val compare : t -> t -> t end
+ *)
+  
 module IntSet = MakeSet (OrderedInt);;
 
 (*
-module OrderedInt : sig type t = int val compare : t -> t -> t end
-
 module IntSet :
   sig
     type elt = int
-    type t = elt list
-    val empty : 'a list
-    val mem : elt -> elt list -> bool
-    val add : elt -> elt list -> elt list
-    val inter : elt list -> elt list -> elt list
-    val elements : 'a -> 'a
+    type t = MakeSet(OrderedInt).t
+    val empty : t
+    val mem : elt -> t -> bool
+    val add : elt -> t -> t
+    val inter : t -> t -> t
+    val elements : t -> elt list
   end
  *)
   
-  
+(* こちらは問題文に書かれているシグネチャつきのモジュールである *)  
 module OrderedInt' : OrderedType  =
   struct
     type t = int
     let compare i j = i - j
-  end;;
-
-
-module IntSet' = MakeSet (OrderedInt');;
-
-  
+  end
 (*
 module OrderedInt' : OrderedType
+ *)
+
+module IntSet' = MakeSet (OrderedInt');;
+(*
 module IntSet' :
   sig
     type elt = OrderedInt'.t
-    type t = elt list
-    val empty : 'a list
-    val mem : elt -> elt list -> bool
-    val add : elt -> elt list -> elt list
-    val inter : elt list -> elt list -> elt list
-    val elements : 'a -> 'a
+    type t = MakeSet(OrderedInt').t
+    val empty : t
+    val mem : elt -> t -> bool
+    val add : elt -> t -> t
+    val inter : t -> t -> t
+    val elements : t -> elt list
   end
  *)
                         
+  
+let s1 = IntSet.add 2 (IntSet.add 1 IntSet.empty);;
+  (* val s1 : IntSet.t = <abstr> *)
+IntSet.elements s1;;
+  (* - : int list = [1; 2] *)
+
+let s2 = IntSet'.add 2 (IntSet'.add 1 IntSet'.empty);;
+  (* Error: This expression has type int but an expression was expected of type IntSet'.elt *)
+  
+(*
+解答
+
+OrderedInt' と、シグネチャつきのモジュールを引数として MakeSet に渡すと、type elt = OrderedInt'.t となる。
+
+そののち、IntSet'.add 1 IntSet'.empty などとすると、型が合わないというエラーが出る。
+Error: This expression has type int but an expression was expected of type IntSet'.elt
+
+ *)
   
