@@ -157,3 +157,62 @@ let c = new calc_many_buttons;;
 c#one; c#zero; c#plus; c#two; c#nine; c#eq;;  (* 10 + 29 = ? *)
 
   (* - : int = 39 *)
+
+class calc_many_buttons =
+object (self)
+  val mutable num = 0
+  val mutable func = fun x -> x
+
+  (* 数字入力メソッドから使われる補助メソッド shift *)
+  method private shift n = num <- num * 10 + n  (* 0 <= n <= 9 *)
+
+  method zero = self#shift 0
+  method one = self#shift 1
+  method two = self#shift 2
+  method three = self#shift 3
+  method four = self#shift 4
+  method five = self#shift 5
+  method six = self#shift 6
+  method seven = self#shift 7
+  method eight = self#shift 8
+  method nine = self#shift 9
+
+  method plus =
+    let x = num in
+    func <- (fun y -> x + y);
+    num <- 0  (* num を 0 クリアする *)
+
+  method eq =
+    let r = func num in
+    num <- 0;  (* num と func をクリアする *)
+    func <- (fun n -> n);
+    r
+
+  method du = num
+end;;
+
+let c = new calc_many_buttons';;
+
+class demo_calc n m =
+object (self)
+  (* インスタンス変数 *)
+  val mutable num = 0
+  val mutable func = fun x -> x
+
+  (* メソッド定義 *)
+  method input n = num <- n
+  method plus =
+    let x = num in
+    func <- (fun y -> x + y)
+  method eq = func num
+
+  initializer
+    self#input n; self#plus; self#input m;
+    Printf.printf "%d + %d = %d\n" n m (self#eq)
+end;;
+
+new demo_calc 32 28;;
+
+  (* 32 + 28 = 60 *)
+
+  (* - : demo_calc = <obj>   *)
