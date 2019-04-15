@@ -125,6 +125,8 @@ object (self)
     num <- 0;  (* num と func をクリアする *)
     func <- (fun n -> n);
     r
+
+  method du = num
 end;;
   
 (*
