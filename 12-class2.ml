@@ -101,7 +101,31 @@ test_calc (new calc) && test_calc (new calc_for_kids);;
 let test_calc c =
   c#input 10; c#plus; c#input 20; c#eq = 30;;
 
+(* val test_calc : < eq : int; input : int -> 'a; plus : 'b; .. > -> bool = <fun>  *)
+  
 let test_calc c =
   c#input 10; c#plus; c#input 20; c#eq = 30 in
 test_calc (new calc);;
 
+(* クラスの名前に # をつける -- ".."を含む多相的オブジェクトの別名 *)
+  
+let input_ten (c : #calc) = c#input 10;;
+  (* val input_ten : #calc -> unit = <fun> *)
+  (* #calc -- <eq : int; input : int -> unit; plus : unit; ..>  *)
+
+
+  input_ten (new calc_for_kids);;
+
+  let myobj =
+    object
+      val mutable num = 0
+
+      method input n = num <- n
+    end;;
+(*
+input_ten (myobj);;
+
+Error: This expression has type < input : int -> unit >
+       but an expression was expected of type #calc
+       The first object type has no method eq
+ *)
