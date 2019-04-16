@@ -31,6 +31,7 @@ let cm = new calc_minus;;
 
 cm#input 13; cm#minus; cm#input 4; cm#eq;;
          
+
 class calc_for_kids =
 object
   inherit calc_minus
@@ -42,6 +43,7 @@ let kc = new calc_for_kids;;
 
 kc#input 4; kc#minus; kc#input 13; kc#eq;;
     
+
 class calc_for_kids2 =
 object
   inherit calc_minus as super
@@ -90,3 +92,16 @@ end;;
   
   [new calc; (new calc_double :> calc); (new calc_minus :> calc)];;
     
+(********** 12.4.3 多相的オブジェクト型 *******************)
+
+let test_calc c =
+  c#input 10; c#plus; c#input 20; c#eq = 30 in
+test_calc (new calc) && test_calc (new calc_for_kids);;
+
+let test_calc c =
+  c#input 10; c#plus; c#input 20; c#eq = 30;;
+
+let test_calc c =
+  c#input 10; c#plus; c#input 20; c#eq = 30 in
+test_calc (new calc);;
+
