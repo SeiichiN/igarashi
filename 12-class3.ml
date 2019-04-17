@@ -50,3 +50,24 @@ class virtual abstract_calc_demo n m op_name =
 (* new abstract_calc_demo 3 6 "op";; *)
 (* Error: Cannot instantiate the virtual class abstract_calc_demo *)
 
+class calc_demo_plus n m =
+  object
+    inherit abstract_calc_demo n m "+"
+    method op = let x = num in func <- (fun y -> x + y)
+  end;;
+
+new calc_demo_plus 6 9;;
+(* 6 + 9 = 15
+ * - : calc_demo_plus = <obj> *)
+
+
+class calc_demo_mult n m =
+  object
+    inherit abstract_calc_demo n m "*"
+    method op = let x = num in func <- (fun y -> x * y)
+  end;;
+
+new calc_demo_mult 6 9;;
+(* 6 * 9 = 54
+ * - : calc_demo_mult = <obj>  *)
+
