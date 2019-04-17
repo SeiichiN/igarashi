@@ -158,7 +158,7 @@ c#one; c#zero; c#plus; c#two; c#nine; c#eq;;  (* 10 + 29 = ? *)
 
   (* - : int = 39 *)
 
-class calc_many_buttons =
+class calc_many_buttons' =
 object (self)
   val mutable num = 0
   val mutable func = fun x -> x
