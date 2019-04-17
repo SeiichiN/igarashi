@@ -129,3 +129,37 @@ Error: This expression has type < input : int -> unit >
        but an expression was expected of type #calc
        The first object type has no method eq
  *)
+
+(* 12.4.4 さらに多相的オブジェクト型について *)
+
+let input_ten calc = calc#input 10
+and push_plus calc = calc#plus;;
+(* val input_ten : < input : int -> 'a; .. > -> 'a = <fun>
+ * val push_plus : < plus : 'a; .. > -> 'a = <fun> *)
+
+let f b = if b then input_ten else push_plus;;
+(* val f : bool -> < input : int -> 'a; plus : 'a; .. > -> 'a = <fun> *)
+
+let k1 a b = a
+and k2 a b = b;;
+(* val k1 : 'a -> 'b -> 'a = <fun>
+ * val k2 : 'a -> 'b -> 'b = <fun> *)
+
+let f b = if b then k1 else k2;;
+(* val f : bool -> 'a -> 'a -> 'a = <fun> *)
+
+let input_foo c = c#input "foo";;
+(* val input_foo : < input : string -> 'a; .. > -> 'a = <fun> *)
+
+(* let f b = if b then input_ten else input_foo;; *)
+
+(* Error: This expression has type < input : string -> 'a; .. > -> 'a
+ *        but an expression was expected of type < input : int -> 'b; .. > -> 'b
+ *               Types for method input are incompatible *)
+
+type t = < m: int; ..>;;
+
+(* Error: A type variable is unbound in this type declaration.
+ * In type < m : int; .. > as 'a the variable 'a is unbound  *)
+(* < m : int; .. > の別名である 'a が左辺で宣言されていない、というエラー *)
+
