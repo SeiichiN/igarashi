@@ -17,11 +17,11 @@ class calc =
         
         method input n = num <- n
         method plus = 
-            let x = num in
+            let x = func num in
             func <- (fun y -> x + y);
         method eq = func num
     end;;
 
 let my = new calc;;
-my#input 11; my#plus; my#input 23; my#eq;;
+my#input 11; my#plus; my#input 23; my#plus; my#input 5; my#eq;;
 
