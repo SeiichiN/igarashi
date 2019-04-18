@@ -49,3 +49,24 @@ f_calc#input 2.0; f_calc#op; f_calc#input 3.14; f_calc#eq;;
     
 (f_calc :> float generic_calc);;
     
+
+(* 多相メソッド *)
+
+class ['a] olist init =
+    object
+        val mutable l = (init : 'a list)
+        method cons a = l <- a :: l
+        method length = List.length l
+        method append l' = l <- List.append l l'
+    end;;
+
+let ol = new olist [1];;
+
+ol#cons 3; ol#length;;
+
+class ['a] olist_fold init =
+    object
+        inherit ['a] olist init
+        method fold_right f e = List.fold_right f l e
+    end;;
+
