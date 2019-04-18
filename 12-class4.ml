@@ -64,9 +64,37 @@ let ol = new olist [1];;
 
 ol#cons 3; ol#length;;
 
-class ['a] olist_fold init =
+class ['a, 'b] olist_fold init =
     object
+        inherit ['a] olist init
+        method fold_right f (e : 'b) = List.fold_right f l e
+    end;;
+
+let l = new olist_fold [1; 2; 3];;
+
+l#fold_right (fun x y -> float_of_int x +. y) 0.0;;
+
+class ['a] olist_fold' init =
+    object
+        inherit ['a] olist init
+        method fold_right : 'b.('a -> 'b -> 'b) -> 'b -> 'b =
+            fun f e -> List.fold_right f l e
+    end;;
+
+let l = new olist_fold' [1; 2; 3];;
+
+l#fold_right (fun x y -> float_of_int x +. y) 0.0;;
+
+l#fold_right (fun x y -> string_of_int x ^ ";" ^ y) "";;
+
+class ['a] olist_fold' init =
+    object (self : <fold_right : 'b.('a -> 'b -> 'b) -> 'b -> 'b; ..>) 
         inherit ['a] olist init
         method fold_right f e = List.fold_right f l e
     end;;
 
+let l = new olist_fold' [1; 2; 3];;
+
+l#fold_right (fun x y -> float_of_int x +. y) 0.0;;
+
+l#fold_right (fun x y -> string_of_int x ^ ";" ^ y) "";;
