@@ -93,3 +93,8 @@ let mirror = function
     | x -> x;;
 (* val mirror : ([> `Left | `Right ] as 'a) -> 'a = <fun> *)
 
+
+let add_A x = `A :: x;;
+(* val add_A : ([> `A ] as 'a) list -> 'a list = <fun> *)
+
+
