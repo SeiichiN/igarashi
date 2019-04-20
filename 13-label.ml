@@ -20,7 +20,7 @@ List.fold_left;;
 ListLabels.fold_left;;
   (* - : f:('a -> 'b -> 'a) -> init:'a -> 'b list -> 'a = <fun> *)
     
-(* 例 *)
+(* 例 : ~f というラベルを使用 *)
 ListLabels.fold_left ~f:(fun x y -> x + y) ~init:0 [1; 2; 3; 4];;
 
 (* 引数の順番を大幅に変えてもＯＫ *)
@@ -138,4 +138,71 @@ This argument cannot be applied without label
 seq 1 10 ~step:4;;  (* [1; 5; 9; 13; 17; 21; 25; 29; 33; 37] *)
 
 (* ----------- 13.3.3 オプション引数の正体 ----------- *)
+
+(* オプション引数に省略時の値を与えない場合、その引数はオプション型の変数として使用できる。
+ *
+ * 省略時の値を与えない書き方
+ *   ?ラベル名:変数名
+ *   ?ラベル名        -- ラベル名と変数名が一致するとき *)
+let rec seq from ?step n =
+    match step with
+    None -> if n <= 0 then [] else from :: seq (from + 1) (n - 1)
+    | Some s ->
+            if n <= 0 then [] else from :: seq (from + s) ~step:s (n - 1);;
+(*  val seq : int -> ?step:int -> int -> int list = <fun>  *)
+
+seq 1 10 ~step:4;;
+(* - : int list = [1; 5; 9; 13; 17; 21; 25; 29; 33; 37] *)
+
+seq 1 10;;
+(* - : int list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] *)
+
+(* こちらのほうが読みやすい *)
+let rec seq from ?step n =
+    let s = match step with 
+        None -> 1 
+        | Some s -> s 
+    in
+    if n <= 0 then [] else from :: seq (from + s) ~step:s (n - 1);;
+
+(* オプション引数にオプション型の値を直接与える *)
+let rec seq from ?step n =
+    let s = match step with
+        None -> 1
+        | Some s -> s
+    in
+    if n <= 0 then [] else from :: seq (from + s) ?step (n - 1);;
+
+(* ------------ 13.3.4 型推論に関する注意 --------------- *)
+
+(*
+ * ラベル付き引数、オプション引数、ともに同じ記号 ~ を使うので注意が必要
+ *)
+let test f = f 10 ~step:2 4;;
+(* val test : (int -> step:int -> int -> 'a) -> 'a = <fun> *)
+(* ==> ~step:2 はラベル付き引数として解釈されている *)
+
+(* f に関数を与えるとき、上の seq関数を与えると、あとの引数は seq関数の引数だと解釈されない。 
+ * test seq;;  とすると型エラーがおこる。
+*)
+
+(* これを防ぐには、型宣言を追加する必要がある *)
+
+let test (f : int -> ?step:int -> int -> 'a list) = f 10 ~step:2 4;;
+(* val test : (int -> ?step:int -> int -> 'a list) -> 'a list = <fun> *)
+
+test seq;;
+(* - : int list = [10; 12; 14; 16] *)
+
+(* ------------------------------------------------------------------ *)
+let test' f = f 10 4;;
+(* val test' : (int -> int -> 'a) -> 'a = <fun> *)
+
+let g ?(x=4) y z = x + y + z;;
+(* val g : ?x:int -> int -> int -> int = <fun>  *)
+
+test' g;;
+(* - : int = 18  *)
+
+test' seq;;
 
