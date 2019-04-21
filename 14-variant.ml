@@ -2,8 +2,43 @@
 
 (********** 14.1 多相ヴァリアントの基本 *****************)
 
-(* -------- 14.1.1 宣言せずに使うコンストラクタ ---------- *)
+type modverb =  (* 英語の助動詞 *)
+    Can | Will | May | Must;;
+  (* type modverb = Can | Will | May | Must *)
 
+type container =  (* いれもの *)
+    Can | Bottle;;
+  (* type container = Can | Bottle *)
+
+type month =
+    January | February | March | April | May | June | July | August | September
+    | October | November | December;;
+  (*
+ type month =                                                                             
+    January
+  | February
+  | March
+  | April
+  | May
+  | June
+  | July
+  | August
+  | September
+  | October
+  | November
+  | December
+ *)
+
+  (* Can や May は、あとから定義されたコンストラクタとしてしか使えない。 *)
+  (* ヴァリアントはコンストラクタと型の関係が固定されている。この問題を解決するのが
+多相ヴァリアント。
+すなわち、ひとつのコンストラクタを複数の型のために使われることを許す仕組み *)
+  
+  (* -------- 14.1.1 宣言せずに使うコンストラクタ ---------- *)
+
+  (* 多相ヴァリアントは、型宣言・定義をせずにコンストラクタを使うことができる。 *)
+
+  (* ふつうのヴァリアントと区別するために、名前の前に ` （バッククオート）をつける *)
 `Can;;  (* - : [> `Can ] = `Can *)
 `May;;  (* - : [> `May ] = `May  *)
 `Can 2;; (* - : [> `Can of int ] = `Can 2 *)
@@ -93,3 +128,41 @@ let mirror = function
     | x -> x;;
 (* val mirror : ([> `Left | `Right ] as 'a) -> 'a = <fun> *)
 
+(*
+[> ...] や [< ...] は、型変数である証拠
+ *)
+
+let add_A x = `A :: x;;
+(* val add_A : ([> `A ] as 'a) list -> 'a list = <fun> *)
+
+(*   add_A [`A 1];;  *)
+
+let c = ref [`Can];;
+(* val c : _[> `Can ] list ref = {contents = [`Can]} *)
+
+c := (`May : [`Can | `May]) :: !c;;
+(*  - : unit = ()  *)
+
+!c;;
+(* - : [ `Can | `May ] list = [`May; `Can]   *)
+
+(*    c := `Will :: !c;;  *)
+(* Error: This expression has type [> `Will ]
+       but an expression was expected of type [ `Can | `May ]
+       The second variant type does not allow tag(s) `Will  *)
+
+let c = ref [];;
+(* val c : '_a list ref = {contents = []} *)
+
+c := 1 :: !c;;
+(* - : unit = () *)
+
+c;;
+(* - : int list ref = {contents = [1]} *)
+!c;;
+(* - : int list = [1]  *)
+
+c := true :: !c;;
+(* Error: This expression has type bool but an expression was expected of type int  *)
+
+  
