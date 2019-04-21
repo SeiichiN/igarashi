@@ -135,7 +135,7 @@ let mirror = function
 let add_A x = `A :: x;;
 (* val add_A : ([> `A ] as 'a) list -> 'a list = <fun> *)
 
-(*   add_A [`A 1];;  *)
+(*   add_A [`A 1];;   <== error *)
 
 let c = ref [`Can];;
 (* val c : _[> `Can ] list ref = {contents = [`Can]} *)
@@ -165,4 +165,3 @@ c;;
 c := true :: !c;;
 (* Error: This expression has type bool but an expression was expected of type int  *)
 
-  
