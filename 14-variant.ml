@@ -176,3 +176,97 @@ type seasons = [ `Spring | `Summer | `Autumn | `Winter ];;
 type seasons_of_japan = [ seasons | `Tsuyu ];;
 (* type seasons_of_japan = [ `Autumn | `Sprint | `Summer | `Tsuyu | `Winter ]  *)
 
+(*************** 14.2 関数定義の拡張 ********************)
+
+(* ---------- 14.2.1 差分の記述による関数定義 ---------------- *)
+
+let hito' = function
+    `Forward -> "walking forward"
+    | `Backward -> "walking backward"
+    | (`Right | `Left) as x -> kani x;;
+(* val hito' : [< `Backward | `Forward | `Left | `Right ] -> string = <fun> *)
+
+hito' `Right;;
+(* - : string = "walking to the right" *)
+
+(*
+let hito' = function
+    `Forward -> "walking forward"
+    | `Backward -> "walking backward"
+    | x -> kani x;;
+*)
+(* Error: This expression has type [> `Backward | `Forward ]
+       but an expression was expected of type [< `Left | `Right ]
+       The second variant type does not allow tag(s) `Backward, `Forward *)
+
+(* --------- 14.2.2 #パターン ---------------- *)
+
+type kani_dir = [`Left | `Right];;
+(* type kani_dir = [ `Left | `Right ] *)
+
+let hito' = function
+    `Forward -> "walking forward"
+    | `Backward -> "walking backward"
+    | #kani_dir as x -> kani x;;
+(* val hito' : [< `Backward | `Forward | `Left | `Right ] -> string = <fun> *)
+
+
+(****************** 14.3 再帰的関数と多相ヴァリアント *****************)
+
+(* ------------- 14.3.1 多相ヴァリアントによるリストの構成 ----------- *)
+
+let l1 = `Nil
+and l2 = `Cons(1, `Nil)
+and l3 = `Cons(2, `Cons(1, `Nil));;
+(* val l1 : [> `Nil ] = `Nil
+val l2 : [> `Cons of int * [> `Nil ] ] = `Cons (1, `Nil)
+val l3 : [> `Cons of int * [> `Cons of int * [> `Nil ] ] ] =
+  `Cons (2, `Cons (1, `Nil)) *)
+
+fun x -> if x then l1 else l2;;
+(* - : bool -> [> `Cons of int * [> `Nil ] | `Nil ] = <fun> *)
+
+let l4 = `Cons(true, `Cons(1, `Nil))
+and l5 = `Cons(`Cons(1, `Nil));;
+(* val l4 : [> `Cons of bool * [> `Cons of int * [> `Nil ] ] ] =
+  `Cons (true, `Cons (1, `Nil))
+val l5 : [> `Cons of [> `Cons of int * [> `Nil ] ] ] = `Cons (`Cons (1, `Nil))  *)
+
+let rec length = function
+    `Nil -> 0
+    | `Cons (a, l) -> 1 + length l;;
+(* val length : ([< `Cons of 'b * 'a | `Nil ] as 'a) -> int = <fun> *)
+
+List.map length [l1; l2; l3];;
+(* - : int list = [0; 1; 2] *)
+
+(* length l4;; *)
+(* Error: This expression has type
+         [> `Cons of bool * [> `Cons of int * [> `Nil ] ] ]
+       but an expression was expected of type
+         [< `Cons of bool * 'a | `Nil ] as 'a
+       Types for tag `Cons are incompatible *)
+
+(* length l5;;  *)
+(* Error: This expression has type
+         [> `Cons of bool * [> `Cons of int * [> `Nil ] ] ]
+       but an expression was expected of type
+         [< `Cons of bool * 'a | `Nil ] as 'a
+       Types for tag `Cons are incompatible *)
+
+let rec max_list = function
+    `Cons(x, `Nil) -> x
+    | `Cons(x, `Cons(y, l)) ->
+            if x < y then max_list (`Cons(y, l))
+            else max_list (`Cons(x, l));;
+(* val max_list : [ `Cons of 'a * ([< `Cons of 'a * 'b | `Nil ] as 'b) ] -> 'a =
+  <fun> *)
+
+let rec max_list = function
+    `Cons (x, `Nil) -> x
+    | `Cons (x, (`Cons (_, _) as l)) ->
+            let m = max_list l in 
+            if x > m then x else m;;
+(* val max_list : [ `Cons of 'a * ([< `Cons of 'a * 'b | `Nil ] as 'b) ] -> 'a =
+  <fun> *)
+
