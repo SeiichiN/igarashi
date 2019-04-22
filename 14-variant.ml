@@ -162,6 +162,17 @@ c;;
 !c;;
 (* - : int list = [1]  *)
 
-c := true :: !c;;
+(* c := true :: !c;;  *)
 (* Error: This expression has type bool but an expression was expected of type int  *)
+
+type seasons = [ `Spring | `Summer | `Autumn | `Winter ];;
+(* type seasons = [ `Autumn | `Sprint | `Summer | `Winter ] *)
+
+(* type seasons = [> `Spring | `Summer | `Autumn | `Winter ];; *)
+(* Error: A type variable is unbound in this type declaration.
+ * In type [> `Autumn | `Sprint | `Summer | `Winter ] as 'a
+ * the variable 'a is unbound *)
+
+type seasons_of_japan = [ seasons | `Tsuyu ];;
+(* type seasons_of_japan = [ `Autumn | `Sprint | `Summer | `Tsuyu | `Winter ]  *)
 
