@@ -325,3 +325,17 @@ let rec alength l = make_alength alength l;;
 
 alength l6;;  (* - : int = 4 *)
 
+type ('a, 'b) mylist = ['Nil | 'Cons of 'a * 'b];;
+
+let make_alength f = function
+    #mylist as l -> make_length f l
+  | `App (l1, l2) -> f l1 + l2;;
+
+let rec alength l = make_alength l;;
+
+(******************* 14.4 その他 ***************)
+
+(* --------- 14.4.1 型付けに関する注意 ----------- *)
+
+function 'A x -> x+1 | `A y -> int_of_float y + 2 | 'B -> 2;;
+
