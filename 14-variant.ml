@@ -325,7 +325,7 @@ let rec alength l = make_alength alength l;;
 
 alength l6;;  (* - : int = 4 *)
 
-type ('a, 'b) mylist = ['Nil | 'Cons of 'a * 'b];;
+type ('a, 'b) mylist = [`Nil | `Cons of 'a * 'b];;
 
 let make_alength f = function
     #mylist as l -> make_length f l
@@ -337,5 +337,43 @@ let rec alength l = make_alength l;;
 
 (* --------- 14.4.1 型付けに関する注意 ----------- *)
 
-function 'A x -> x+1 | `A y -> int_of_float y + 2 | 'B -> 2;;
+(* function `A x -> x+1 | `A y -> (int_of_float y) + 2 | `B -> 2;; *)
+(* Error: This expression has type int but an expression was expected of type float  *)
+
+let f = function `A x -> x+1 | `B -> 2;;
+(* val f : [< `A of int | `B ] -> int = <fun>  *)
+
+let g = function `A y -> int_of_float y + 2 | `B -> 3;;
+(* val g : [< `A of float | `B ] -> int = <fun>  *)
+
+let f_or_g  = fun x -> if x then f else g;;
+(* val f_or_g : bool -> [< `A of int & float | `B ] -> int = <fun> *)
+
+let next_season = function
+    `Spring -> `Summer | `Summer -> `Autumn | `Autumn -> `Winter | `Winter -> `Spring;;
+(* val next_season :
+ *   [< `Autum | `Spring | `Summer ] -> [> `Autumn | `Summer | `Winter ] = <fun> *)
+
+next_season `Autumn;;
+next_season `Winter;;
+
+(**************** 多相的オブジェクトと多相ヴァリアント ****************)
+
+let f o = [o#foo 1; o#bar "0xAB"];;
+(* val f : < bar : string -> 'a; foo : int -> 'a; .. > -> 'a list = <fun> *)
+
+let g v = match v with `Foo x -> x + 1 | `Bar y -> int_of_string y;;
+(* val g : [< `Bar of string | `Foo of int ] -> int = <fun>  *)
+
+let l = [`Foo 1; `Bar "0xAB"];;
+(* val l : [> `Bar of string | `Foo of int ] list = [`Foo 1; `Bar "0xAB"] *)
+
+List.map g l;;  (* - : int list = [2; 171] *)
+
+f (object
+  method foo x = x + 1
+  method bar y = int_of_string y
+end);;
+(* - : int list = [2; 171] *)
+
 
