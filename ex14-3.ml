@@ -72,6 +72,10 @@ let rec amax_list l = make_amax amax_list l;;
 amax_list l6;;  (* - : int = 5  *)
 amax_list l7;;  (* - : int = 17 *)
 
+(****************************************
+ *             map
+ ****************************************)
+
 let rec map f = function
     `Nil -> `Nil
     | `Cons (a, l) ->
@@ -83,3 +87,32 @@ let rec map f = function
 
 map (fun x -> x * 2) l1;;
 (*  - : [> `Cons of int * 'a | `Nil ] as 'a = `Cons (2, `Cons (4, `Nil))  *)
+
+(* ---------------- ふつうの `Cons リスト ------------- *)
+let make_map func f = function
+    `Nil -> `Nil
+    | `Cons (a, l) ->
+            `Cons((f a), func f l);;
+
+let rec map_list f l = make_map map_list f l;;
+
+map_list (fun x -> x * 2) l1;;  (* `Cons (2, `Cons (4, `Nil))  *)
+
+#use "ex14-1.ml";;  (*  append関数を使うため *)
+
+(* ----------------- 拡張リスト --------------------- *)
+(*
+let amake_map func f = function
+    (`Cons (_, `Nil) | `Cons(_, `Cons(_, _))) as l -> make_map func f l
+    | `Cons(x, `App(l1, l2)) ->
+            append (make_map func f (`Cons(x, `Nil))) (append (func f l1) (func f l2));;
+*)
+
+let amake_map func f = function
+    (`Nil | `Cons(_, _)) as l -> make_map func f l
+    | `App(l1, l2) ->
+            append (func f l1) (func f l2);;
+
+let rec amap_list f l = amake_map amap_list f l;;
+
+amap_list (fun x -> x * 2) l7;;
