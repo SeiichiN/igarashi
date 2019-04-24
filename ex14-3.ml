@@ -32,9 +32,19 @@ max_list l2;;
 
 let l6 = `Cons (5, `App (l1, l2));;
 
+let make_max f = function
+  `Cons (x, `Nil) -> x
+  | `Cons (x, `Cons (y, l)) ->
+    if x < y then f (`Cons(y, l))
+    else f (`Cons(x, l));;
+
+let rec max_list l = make_max max_list l;;
+
+(*
 let amax_list = function
   Cons (x, l) -> max_list (`Cons (x, l))
   | `App(l1, l2) -> 
+*)
 
-max_list l6;;
+max_list l2;;
 
