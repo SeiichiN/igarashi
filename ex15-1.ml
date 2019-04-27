@@ -1,36 +1,13 @@
-(* 15.1 「銀行口座」を作ってみる *)
+(* プログラミング in OCaml 練習問題 15.1 *)
+
+(* 練習問題 15.1 *)
+
+(*
+銀行口座プログラムを改造して、残高がマイナスになった時に、（終了するのではなくて）残高表示の文字が赤になるようにしなさい。
+ *)
 
 #directory "+labltk";;
 #load "labltk.cma";;
-
-(* Label.create;;  *)
-(*
-- : ?name:string ->
-    ?anchor:anchor ->
-    ?background:color ->
-    ?bitmap:bitmap ->
-    ?borderwidth:int ->
-    ?cursor:cursor ->
-    ?font:string ->
-    ?foreground:color ->
-    ?height:int ->
-    ?highlightbackground:color ->
-    ?highlightcolor:color ->
-    ?highlightthickness:int ->
-    ?image:[< image ] ->
-    ?justify:justification ->
-    ?padx:int ->
-    ?pady:int ->
-    ?relief:relief ->
-    ?takefocus:bool ->
-    ?text:string ->
-    ?textvariable:Textvariable.textVariable ->
-    ?textwidth:int ->
-    ?underline:int ->
-    ?width:int ->
-    ?wraplength:int -> 'a Widget.widget -> Widget.label Widget.widget
-= <fun>
-*)
 
 open Tk;;
 
@@ -50,10 +27,13 @@ let label1 = Label.create top ~textvariable:tv_balance ~relief: `Raised;;
 (* val label1 : Widget.label Widget.widget = <abstr> *)
 
 let print_balance tv =
-    if !balance < 0 then (closeTk(); exit 0)
-    else
-        let s = Printf.sprintf "残高は%8d 円です" !balance in
-        Textvariable.set tv s;;
+  if !balance < 0
+  then
+    let s = Printf.sprintf "残高は%8d 円です" !balance in
+    Textvariable.set tv s
+  else
+    let s = Printf.sprintf "残高は%8d 円です" !balance in
+    Textvariable.set tv s;;
 (* val print_balance : Textvariable.textVariable -> unit = <fun> *)
 
 let bot_frame = Frame.create top;;
@@ -89,16 +69,27 @@ let action entry tv_but tv_bal () =
   Textvariable.textVariable -> Textvariable.textVariable -> unit -> unit =
   <fun>  *)
 
-let button = Button.create bot_frame
+let button_ok = Button.create bot_frame
     ~text:"OK!"
     ~command:(action entry tv_button tv_balance);;
-(* val button : Widget.button Widget.widget = <abstr> *)
+  (* val button : Widget.button Widget.widget = <abstr> *)
+
+let end_frame = Frame.create top;;
+
+(* let end_action () = *)
+(*   closeTk(); exit 0;; *)
+  
+let button_end = Button.create end_frame
+                               ~text:"終了"
+                               ~command:(closeTk(); exit 0);;
+                               (* ~command:(end_action ());; *)
+  
 
 pack radiobuttons ~side:`Top;;
 
 (* coe -- どんなwidgetでも any widget という同じ型に変換してくれる。 *)
-pack [coe entry; coe label2; coe rb_frame; coe button] ~side:`Left;;
+pack [coe entry; coe label2; coe rb_frame; coe button_ok; coe button_end] ~side:`Left;;
 
-pack [coe label1; coe bot_frame] ~side:`Top;;
+pack [coe label1; coe bot_frame; coe end_frame] ~side:`Top;;
 
 print_balance tv_balance;;
