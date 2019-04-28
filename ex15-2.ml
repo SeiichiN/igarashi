@@ -1,30 +1,24 @@
-(* プログラミング in OCaml 練習問題 15.1 *)
+(* プログラミング in OCaml 練習問題 15.2 *)
 
-(* 練習問題 15.1 *)
+(* 練習問題 15.2 *)
 
 (*
-銀行口座プログラムを改造して、残高がマイナスになった時に、（終了するのではなくて）残高表示の文字が赤になるようにしなさい。
+銀行口座プログラムを改造して、預金、引き出しの履歴を記録してリストボックスに表示しなさい。
  *)
-
 #directory "+labltk";;
 #load "labltk.cma";;
 
 open Tk;;
 
 let balance = ref 0;;  (* 残高 *)
-(* val balance : int ref = {contents = 0} *)
 
 let add_balance x = balance := !balance + x;;  (* 残高を更新する *)
-(* val add_balance : int -> unit = <fun> *)
 
 let top = openTk();;  (* アプリ全体のウィンドウ *)
-(* val top : Widget.toplevel Widget.widget = <abstr> *)
 
 let tv_balance = Textvariable.create ();;  (* ラベルに表示する文字 *)
-(* val tv_balance : Textvariable.textVariable = <abstr> *)
 
 let label1 = Label.create top ~textvariable:tv_balance ~relief: `Raised;;
-(* val label1 : Widget.label Widget.widget = <abstr> *)
 
 let print_balance tv =
   if !balance < 0
@@ -36,20 +30,16 @@ let print_balance tv =
     let s = Printf.sprintf "残高は%8d 円です" !balance in
     Textvariable.set tv s;
     Label.configure label1 ~foreground: `Black;;
-(* val print_balance : Textvariable.textVariable -> unit = <fun> *)
 
 let bot_frame = Frame.create top;;
-(* val bot_frame : Widget.frame Widget.widget = <abstr> *)
+
 
 let entry = Entry.create bot_frame
 and label2 = Label.create bot_frame ~text:"円"
 and rb_frame = Frame.create bot_frame;;
-(* val entry : Widget.entry Widget.widget = <abstr>
-val label2 : Widget.label Widget.widget = <abstr>
-val rb_frame : Widget.frame Widget.widget = <abstr> *)
 
 let tv_button = Textvariable.create ();;
-(* val tv_button : Textvariable.textVariable = <abstr> *)
+
 
 let radiobuttons = 
     List.map
@@ -57,24 +47,32 @@ let radiobuttons =
         Radiobutton.create rb_frame ~text:t ~value:a ~variable:tv_button)
     [("を預金する", "Deposit");
     ("を引き出す", "Withdraw")];;
-(* val radiobuttons : Widget.radiobutton Widget.widget list = [<abstr>; <abstr>]
-*)
 
+let list_frame = Frame.create top;;
+
+let l_text = ref ""
+and listbox = Listbox.create list_frame;;
+
+let add_list yen =
+  if yen < 0
+  then
+    l_text := Printf.sprintf "引出: %8d 円" yen
+  else
+    l_text := Printf.sprintf "預入: %8d 円" yen;
+  Listbox.insert ~index:`End ~texts:[!l_text] listbox
+  
 let action entry tv_but tv_bal () =
     let y = int_of_string (Entry.get entry) in
     match Textvariable.get tv_but with
-    "Deposit" -> add_balance y; print_balance tv_bal
-    | "Withdraw" -> add_balance (-y); print_balance tv_bal
+    "Deposit" -> add_balance y; print_balance tv_bal; add_list y
+    | "Withdraw" -> add_balance (-y); print_balance tv_bal; add_list (-y)
     | _ -> failwith "Cannot happen";;
-(* val action :
-  Widget.entry Widget.widget ->
-  Textvariable.textVariable -> Textvariable.textVariable -> unit -> unit =
-  <fun>  *)
+           
 
 let button_ok = Button.create bot_frame
     ~text:"実行"
     ~command:(action entry tv_button tv_balance);;
-  (* val button : Widget.button Widget.widget = <abstr> *)
+
 
 
 let end_frame = Frame.create top;;
@@ -85,15 +83,21 @@ let end_action () =
 let button_end = Button.create end_frame
                                ~text:"終了"
                                ~command:(end_action ());;
-  
+
+let sb = Scrollbar.create list_frame;;
+
+Listbox.configure ~yscrollcommand:(Scrollbar.set sb) listbox;;
+Scrollbar.configure ~command:(Listbox.yview listbox)  sb;;
+
 
 pack radiobuttons ~side:`Top;;
 
-(* coe -- どんなwidgetでも any widget という同じ型に変換してくれる。 *)
 pack [coe entry; coe label2; coe rb_frame; coe button_ok] ~side:`Left;;
 
-pack [coe button_end] ~side:`Right;;
+  pack [coe button_end] ~side:`Right;;
+
+    pack [coe listbox; coe sb] ~side:`Left ~fill:`Y;;
   
-pack [coe label1; coe bot_frame; coe end_frame] ~side:`Top;;
+pack [coe label1; coe bot_frame; coe list_frame; coe end_frame] ~side:`Top;;
 
 print_balance tv_balance;;
